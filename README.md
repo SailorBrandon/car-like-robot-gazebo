@@ -11,7 +11,7 @@ sudo apt-get install ros-noetic-navigation ros-noetic-gmapping ros-noetic-teb-lo
 Then install this package:
 ```
 mkdir -p ~/catkin_ws/src && cd ~/catkin_ws/src
-git clone <this repo>
+git clone --recurse-submodules <this repo>
 cd ~/catkin_ws && catkin_make
 source ~/catkin_ws/devel/setup.bash
 ```
