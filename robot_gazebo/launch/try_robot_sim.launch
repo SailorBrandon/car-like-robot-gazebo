@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
     <!-- Gazebo Config -->
-    <arg name="world" value="empty" doc="room_mini, race_with_cone, ROS-Academy, ISCAS_building, small_city"/>
+    <arg name="world" default="empty" doc="ISCAS_building, ROS-Academy, small_city"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="true"/>
     <arg name="gui" default="true"/>
@@ -17,12 +17,9 @@
         <arg name="world_name" value="$(find robot_gazebo)/worlds/$(arg world).world"/>
     </include>
 
-    <!-- Map -->
-    <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find robot_gazebo)/maps/$(arg world).yaml" /> -->
-
     <!-- Spawn robot with init pose-->
     <arg name="robot_name" default="pav_s00" doc="pav_s00, pav_s01, pav_s01_scaled"/>
-    
+
     <arg name="x_pos" default="0"/>
     <arg name="y_pos" default="0"/>
     <arg name="z_pos" default="0"/>
@@ -30,16 +27,30 @@
     <arg name="P_pos" default="0"/>
     <arg name="Y_pos" default="0"/>
 
-    <param name="robot_description" command="$(find xacro)/xacro '$(find robot_description)/urdf/$(arg robot_name)/$(arg robot_name).xacro'"/>
-    <node name="spawn_model_node" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
-    args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos)
+    <param name="robot_description" command="$(find xacro)/xacro '$(find robot_gazebo)/urdf/$(arg robot_name)/$(arg robot_name).xacro'"/>
+    <node name="spawn_model_node" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos)
     -R $(arg R_pos) -P $(arg P_pos) -Y $(arg Y_pos)"/>
 
     <!-- Load robot motor controllers -->
-    <rosparam file="$(find robot_motor_control)/config/$(arg robot_name)_motor_ctrl_config.yaml" command="load"/>
+    <rosparam file="$(find robot_gazebo)/config/controller_manager/$(arg robot_name)_motor_ctrl_config.yaml" command="load"/>
 
     <group ns="$(arg robot_name)">
-        <include file="$(find robot_motor_control)/launch/car_motor_ctrl.launch"/>
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+                                                left_front_wheel_velocity_controller
+                                                right_front_wheel_velocity_controller
+                                                right_rear_wheel_velocity_controller
+                                                left_rear_wheel_velocity_controller
+                                                left_steering_hinge_position_controller 
+                                                right_steering_hinge_position_controller
+                                                joint_state_controller"/>
+
+        <node name="robot_state_publisher_node" pkg= "robot_state_publisher" type= "robot_state_publisher" respawn="false" output="screen"/>
+
+        <!-- <node name="joint_state_publisher_node" pkg="joint_state_publisher" type="joint_state_publisher" respawn="false" output="screen"/> -->
+
+        <node name="gazebo_manager_node" pkg="robot_gazebo" type="gazebo_manager_node" output="screen"/>
+
+        <node name="keyboard_teleop" pkg="robot_gazebo" type="keyboard_teleop.py" output="screen"/>
     </group>
 
 </launch>

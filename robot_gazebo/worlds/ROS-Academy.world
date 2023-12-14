@@ -32,16 +32,17 @@
       <pose>0 0 0 0 0 -1.57</pose>
     </include>
 
-    <!--<include>
+    <include>
       <uri>model://ISCAS_post</uri>
       <name>table1</name>
       <pose>8 3.5 0 0 0 1</pose>
     </include>
+    
     <include>
       <uri>model://ISCAS_post</uri>
       <name>table2</name>
       <pose>6 5 0 0 0 1.57</pose>
-    </include>-->
+    </include>
 
   </world>
 </sdf>
