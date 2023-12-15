@@ -29,8 +29,8 @@
         </geometry>
         <material>
           <script>
-            <uri>model://ISCAS_groundplane/materials/scripts</uri>
-            <uri>model://ISCAS_groundplane/materials/textures</uri>
+            <uri>model://ISCAS/ISCAS_groundplane/materials/scripts</uri>
+            <uri>model://ISCAS/ISCAS_groundplane/materials/textures</uri>
             <name>ISCAS_groundplane/Image </name>
           </script>
         </material>

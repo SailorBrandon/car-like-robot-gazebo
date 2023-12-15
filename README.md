@@ -18,10 +18,6 @@ git clone --recurse-submodules <this repo>
 cd ~/catkin_ws && catkin_make
 source ~/catkin_ws/devel/setup.bash
 ```
-Set up the environment variable:
-```
-export GAZEBO_MODEL_PATH=${GAZEBO_MODEL_PATH}:$(rospack find robot_gazebo)/models/ISCAS:$(rospack find robot_gazebo)/models/robots
-```
 
 ## Usage
 Try the robot in Gazebo:

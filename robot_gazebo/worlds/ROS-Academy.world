@@ -24,22 +24,22 @@
     </include>
 
     <include>
-      <uri>model://ISCAS_groundplane</uri>
+      <uri>model://ISCAS/ISCAS_groundplane</uri>
     </include>
 
     <include>
-      <uri>model://ISCAS_Museum</uri>
+      <uri>model://ISCAS/ISCAS_Museum</uri>
       <pose>0 0 0 0 0 -1.57</pose>
     </include>
 
     <include>
-      <uri>model://ISCAS_post</uri>
+      <uri>model://ISCAS/ISCAS_post</uri>
       <name>table1</name>
       <pose>8 3.5 0 0 0 1</pose>
     </include>
     
     <include>
-      <uri>model://ISCAS_post</uri>
+      <uri>model://ISCAS/ISCAS_post</uri>
       <name>table2</name>
       <pose>6 5 0 0 0 1.57</pose>
     </include>

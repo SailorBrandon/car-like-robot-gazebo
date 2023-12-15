@@ -33,7 +33,7 @@
       <visual name="visual">
         <geometry>
           <mesh>
-            <uri>model://ISCAS_post/meshes/post.dae</uri>
+            <uri>model://ISCAS/ISCAS_post/meshes/post.dae</uri>
           </mesh>
         </geometry>
       </visual>

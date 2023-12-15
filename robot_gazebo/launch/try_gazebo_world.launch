@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="world" default="ISCAS_building" doc="ISCAS_building, ROS-Academy, small_city"/>
+    <arg name="world" default="ROS-Academy" doc="ISCAS_building, ROS-Academy, small_city"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="true"/>
     <arg name="gui" default="true"/>

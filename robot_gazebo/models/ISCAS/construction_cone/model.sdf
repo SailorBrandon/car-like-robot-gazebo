@@ -6,7 +6,7 @@
         <geometry>
           <mesh>
             <scale>10 10 10</scale>
-            <uri>model://construction_cone/meshes/construction_cone.dae</uri>
+            <uri>model://ISCAS/construction_cone/meshes/construction_cone.dae</uri>
           </mesh>
         </geometry>
       </collision>
@@ -14,7 +14,7 @@
         <geometry>
           <mesh>
             <scale>10 10 10</scale>
-            <uri>model://construction_cone/meshes/construction_cone.dae</uri>
+            <uri>model://ISCAS/construction_cone/meshes/construction_cone.dae</uri>
           </mesh>
         </geometry>
       </visual>
