@@ -1,0 +1,107 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <scene>
+      <grid>false</grid>
+    </scene>
+
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <!-- Invisible ground plane -->
+    <model name="ground">
+      <link name="body">
+        <collision name="geom">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+      </link>
+      <static>true</static>
+    </model>
+
+    <road name="straight_road">
+      <width>1</width>
+      <point>-10 0 0</point>
+      <point>10 0 0</point>
+    </road>
+
+    <model name="obstacle">
+      <static>true</static>
+      <pose>2 -0.25 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.4 0.2 0.4</size>              <!-- Length, Width, Height -->
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+             <size>0.4 0.2 0.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Define walls -->
+    <!-- Wall on one side of the road -->
+    <model name="left_wall">
+      <static>true</static>
+      <pose>0 0.6 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>20 0.05 0.4</size>              <!-- Length, Width, Height -->
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>20 0.05 0.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <!-- Wall on the other side of the road -->
+    <model name="right_wall">
+      <static>true</static>
+      <pose>0 -0.6 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>20 0.05 0.4</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>20 0.05 0.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

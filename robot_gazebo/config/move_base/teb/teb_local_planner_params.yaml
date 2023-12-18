@@ -20,7 +20,7 @@ TebLocalPlannerROS:
     
   #如果为true，则在目标落后于起点的情况下，可以使用向后运动来初始化基础轨迹
   #(仅在机器人配备了后部传感器的情况下才建议这样做）
-  allow_init_with_backwards_motion: True # tuned for tracking hybrid A* trajectories
+  allow_init_with_backwards_motion: False # tuned for tracking hybrid A* trajectories
 
   global_plan_viapoint_sep: 0.2 # tuned for tracking hybrid A* trajectories
   via_points_ordered: False # tuned for tracking hybrid A* trajectories
