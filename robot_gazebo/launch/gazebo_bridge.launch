@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="world" default="ROS-Academy" doc="ISCAS_building, ROS-Academy, simple_road"/>
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="headless" value="$(arg headless)"/>
+        <arg name="world_name" value="$(find robot_gazebo)/worlds/$(arg world).world"/>
+    </include>
+
+    <arg name="robot_name_0" default="ego_vehicle"/>
+    <arg name="robot_type_0" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
+    <group ns="$(arg robot_name_0)">
+        <include file="$(find robot_gazebo)/launch/gmapping.launch" />
+        <include file="$(find robot_gazebo)/launch/create_robot.launch">
+            <arg name="robot_name" value="$(arg robot_name_0)"/>
+            <arg name="robot_type" value="$(arg robot_type_0)"/>
+            <arg name="x_pos" value="0"/>
+            <arg name="y_pos" value="-0.2"/>
+            <arg name="z_pos" value="0"/>
+            <arg name="R_pos" value="0"/>
+            <arg name="P_pos" value="0"/>
+            <arg name="Y_pos" value="0"/>
+        </include>
+    </group>
+
+</launch>

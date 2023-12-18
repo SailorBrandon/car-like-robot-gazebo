@@ -1,0 +1,36 @@
+<launch>
+    <arg name="robot_name"/>
+    <arg name="robot_type"/>
+    <arg name="x_pos"/>
+    <arg name="y_pos"/>
+    <arg name="z_pos"/>
+    <arg name="R_pos"/>
+    <arg name="P_pos"/>
+    <arg name="Y_pos"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(find robot_gazebo)/urdf/$(arg robot_type)/$(arg robot_type).xacro' robot_name:=$(arg robot_name)"/>
+
+    <node name="spawn_model_node" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model $(arg robot_name) -param robot_description -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos)
+        -R $(arg R_pos) -P $(arg P_pos) -Y $(arg Y_pos)"/>
+
+    <rosparam file="$(find robot_gazebo)/config/controller_manager/$(arg robot_type)_motor_ctrl_config.yaml" command="load"/>
+
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="
+                                            left_front_wheel_velocity_controller
+                                            right_front_wheel_velocity_controller
+                                            right_rear_wheel_velocity_controller
+                                            left_rear_wheel_velocity_controller
+                                            left_steering_hinge_position_controller 
+                                            right_steering_hinge_position_controller
+                                            joint_state_controller"/>
+
+    <node name="robot_state_publisher_node" pkg= "robot_state_publisher" type= "robot_state_publisher" respawn="false" output="screen"/>
+
+    <!-- <node name="joint_state_publisher_node" pkg="joint_state_publisher" type="joint_state_publisher" respawn="false" output="screen"/> -->
+
+    <node name="gazebo_manager_node" pkg="robot_gazebo" type="gazebo_manager_node.py" output="screen">
+        <param name="robot_name" value="$(arg robot_name)"/>
+        <!-- <remap from="/$(arg robot_name)/gazebo_bridge/cmd_vel" to="/cmd_vel"/> -->
+    </node>
+
+</launch>

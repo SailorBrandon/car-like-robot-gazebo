@@ -1,12 +1,5 @@
 <launch>
 
-    <include file="$(find robot_gazebo)/launch/try_robot_sim.launch">
-        <arg name="robot_name" value="pav_s01"/>
-        <arg name="world" value="ROS-Academy"/>
-    </include>
-
-    <include file="$(find robot_gazebo)/launch/gmapping.launch" />
-
     <!-- Map -->
     <!-- <node name="map_server" pkg="map_server" type="map_server" args="$(find robot_gazebo)/maps/$(arg world).yaml" /> -->
 

@@ -40,19 +40,19 @@
 
     <model name="obstacle">
       <static>true</static>
-      <pose>2 -0.25 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <pose>2 -0.25 0.15 0 0 0</pose>      <!-- Adjust pose to align with the road -->
       <link name="link">
         <collision name="collision">
           <geometry>
             <box>
-              <size>0.4 0.2 0.4</size>              <!-- Length, Width, Height -->
+              <size>0.4 0.2 0.3</size>              <!-- Length, Width, Height -->
             </box>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <box>
-             <size>0.4 0.2 0.4</size>
+             <size>0.4 0.2 0.3</size>
             </box>
           </geometry>
         </visual>

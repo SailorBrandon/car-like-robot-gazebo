@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<robot name="pav_s01"
-  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<robot name="$(arg robot_name)" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- Gazebo references -->
 
@@ -79,7 +79,7 @@
   <!-- Gazebo Plugins -->
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
-      <robotNamespace>/pav_s01</robotNamespace>
+      <!-- <robotNamespace>$(arg robot_name)</robotNamespace> -->
       <robotParam>robot_description</robotParam>
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
       <legacyModeNS>true</legacyModeNS>
@@ -110,7 +110,7 @@
         </noise>
       </ray>
       <plugin name="lidar_2d_controller" filename="libgazebo_ros_laser.so">
-        <topicName>/scan</topicName>
+        <topicName>scan</topicName>
         <frameName>lidar_2d</frameName>
       </plugin>
     </sensor>
@@ -134,7 +134,7 @@
         </clip>
       </camera>
       <plugin name="kinect_real_sense_controller" filename="libgazebo_ros_openni_kinect.so">
-        <cameraName>real_sense</cameraName>
+        <cameraName>depth_camera</cameraName>
         <alwaysOn>true</alwaysOn>
         <updateRate>10</updateRate>
         <imageTopicName>rgb/image_raw</imageTopicName>

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot name="pav_s01_scaled" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="$(arg robot_name)" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <!-- transmission macros -->
 <xacro:macro name="wheel_transmission" params="name">

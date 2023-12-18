@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<robot name="pav_s00"
+<robot name="$(arg robot_name)"
   xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:include filename="$(find robot_gazebo)/urdf/pav_s00/macros.xacro" />

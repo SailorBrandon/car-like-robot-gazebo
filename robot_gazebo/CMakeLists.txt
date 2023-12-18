@@ -14,26 +14,18 @@ find_package(catkin REQUIRED COMPONENTS
   joint_state_publisher
   robot_state_publisher
   tf2_ros
+  iss_manager
 )
 
 catkin_package(
  INCLUDE_DIRS include
 #  LIBRARIES robot_gazebo
- CATKIN_DEPENDS controller_manager roscpp rospy
+ CATKIN_DEPENDS controller_manager roscpp rospy iss_manager
 #  DEPENDS system_lib
-)
-
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-
-add_executable(gazebo_manager_node src/gazebo_manager_node.cpp)
-target_link_libraries(gazebo_manager_node
-  ${catkin_LIBRARIES}
 )
 
 catkin_install_python(PROGRAMS
   scripts/keyboard_teleop.py
+  scripts/gazebo_manager_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
