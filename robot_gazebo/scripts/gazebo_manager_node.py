@@ -12,9 +12,10 @@ from std_msgs.msg import Float64
 
 class GazeboManagerNode:
     def __init__(self) -> None:
-        self._gt_ego_odom_pub = rospy.Publisher("gazebo_bridge/ego_odom", Odometry, queue_size=1)
-        self._ego_state_pub = rospy.Publisher("gazebo_bridge/ego_state_estimation", State, queue_size=1)
-        self._object_detection_pub = rospy.Publisher("gazebo_bridge/object_detection", ObjectDetection3DArray, queue_size=1)
+        self._gt_ego_odom_pub = rospy.Publisher("ego_odom", Odometry, queue_size=1)
+        self._ego_state_pub_odom = rospy.Publisher("ego_state_estimation_odom", Odometry, queue_size=1)
+        self._ego_state_pub = rospy.Publisher("ego_state_estimation", State, queue_size=1)
+        self._object_detection_pub = rospy.Publisher("object_detection", ObjectDetection3DArray, queue_size=1)
         
         self._gazebo_states_sub = rospy.Subscriber("/gazebo/model_states", ModelStates, self._gazebo_states_callback)
         self._ego_vehicle_name = rospy.get_param("robot_name", "ego_vehicle")
@@ -27,7 +28,7 @@ class GazeboManagerNode:
         self._ego_state_pub_timer = rospy.Timer(rospy.Duration(0.1), self._ego_state_pub_callback)
         
         self._ack_sub = rospy.Subscriber("ackermann_cmd_mux/output", AckermannDriveStamped, self.ack_callback)
-        self._cmd_vel_sub = rospy.Subscriber("gazebo_bridge/cmd_vel", Twist, self.cmd_vel_callback)
+        self._cmd_vel_sub = rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback)
 
         self._pub_vel_left_rear_wheel = rospy.Publisher("left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
         self._pub_vel_right_rear_wheel = rospy.Publisher("right_rear_wheel_velocity_controller/command", Float64, queue_size=1)
@@ -117,8 +118,25 @@ class GazeboManagerNode:
         ego_state_msg.heading_angle = heading_angle
         ego_state_msg.velocity = math.sqrt(self._ego_odom.twist.twist.linear.x**2 + self._ego_odom.twist.twist.linear.y**2)
         self._ego_state_pub.publish(ego_state_msg)
+        ego_state_odom_msg = Odometry()
+        ego_state_odom_msg.header.stamp = rospy.Time.now()
+        ego_state_odom_msg.header.frame_id = "map"
+        ego_state_odom_msg.child_frame_id = "base_footprint"
+        ego_state_odom_msg.pose.pose.position.x = x
+        ego_state_odom_msg.pose.pose.position.y = y
+        ego_state_odom_msg.pose.pose.position.z = 0.0
+        ego_state_odom_msg.pose.pose.orientation.x = rot[0]
+        ego_state_odom_msg.pose.pose.orientation.y = rot[1]
+        ego_state_odom_msg.pose.pose.orientation.z = rot[2]
+        ego_state_odom_msg.pose.pose.orientation.w = rot[3]
+        ego_state_odom_msg.twist.twist.linear.x = self._ego_odom.twist.twist.linear.x
+        ego_state_odom_msg.twist.twist.linear.y = self._ego_odom.twist.twist.linear.y
+        ego_state_odom_msg.twist.twist.linear.z = self._ego_odom.twist.twist.linear.z
+        ego_state_odom_msg.twist.twist.angular.x = self._ego_odom.twist.twist.angular.x
+        ego_state_odom_msg.twist.twist.angular.y = self._ego_odom.twist.twist.angular.y
+        ego_state_odom_msg.twist.twist.angular.z = self._ego_odom.twist.twist.angular.z
+        self._ego_state_pub_odom.publish(ego_state_odom_msg)
         
-    
     def ack_callback(self, msg):
         vel_left_rear_wheel = Float64()
         vel_right_rear_wheel = Float64()

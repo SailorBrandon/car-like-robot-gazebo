@@ -40,7 +40,7 @@
 
     <model name="obstacle">
       <static>true</static>
-      <pose>2 -0.25 0.15 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <pose>1.5 -0.25 0.15 0 0 0</pose>      <!-- Adjust pose to align with the road -->
       <link name="link">
         <collision name="collision">
           <geometry>

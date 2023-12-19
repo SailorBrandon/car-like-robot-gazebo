@@ -18,14 +18,13 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
- INCLUDE_DIRS include
+#  INCLUDE_DIRS 
 #  LIBRARIES robot_gazebo
  CATKIN_DEPENDS controller_manager roscpp rospy iss_manager
 #  DEPENDS system_lib
 )
 
 catkin_install_python(PROGRAMS
-  scripts/keyboard_teleop.py
   scripts/gazebo_manager_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
