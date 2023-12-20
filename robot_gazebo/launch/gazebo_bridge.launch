@@ -36,7 +36,7 @@
     <remap from="/$(arg robot_name_0)/tf" to="/$(arg robot_name_0)/tf"/>
     <remap from="/$(arg robot_name_0)/tf_static" to="/$(arg robot_name_0)/tf_static"/>
 
-    <arg name="robot_name_1" default="npc_0"/>
+    <!-- <arg name="robot_name_1" default="npc_0"/>
     <arg name="robot_type_1" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
     <group ns="$(arg robot_name_1)">
         <include file="$(find robot_gazebo)/launch/gmapping.launch">
@@ -54,5 +54,5 @@
         </include>
     </group>
     <remap from="/$(arg robot_name_1)/tf" to="/$(arg robot_name_1)/tf"/>
-    <remap from="/$(arg robot_name_1)/tf_static" to="/$(arg robot_name_1)/tf_static"/>
+    <remap from="/$(arg robot_name_1)/tf_static" to="/$(arg robot_name_1)/tf_static"/> -->
 </launch>

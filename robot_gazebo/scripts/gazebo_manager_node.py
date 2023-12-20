@@ -28,7 +28,7 @@ class GazeboManagerNode:
         self._ego_state_pub_timer = rospy.Timer(rospy.Duration(0.1), self._ego_state_pub_callback)
         
         self._ack_sub = rospy.Subscriber("ackermann_cmd_mux/output", AckermannDriveStamped, self.ack_callback)
-        self._cmd_vel_sub = rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback)
+        self._cmd_vel_sub = rospy.Subscriber("/cmd_vel", Twist, self.cmd_vel_callback)
 
         self._pub_vel_left_rear_wheel = rospy.Publisher("left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
         self._pub_vel_right_rear_wheel = rospy.Publisher("right_rear_wheel_velocity_controller/command", Float64, queue_size=1)
