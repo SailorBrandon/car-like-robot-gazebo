@@ -39,6 +39,8 @@ class GazeboManagerNode:
         self._fac = 31.25
         
         self._namespaces = rospy.get_namespace().replace("/", "") + "/"
+        self._real_car_odom_sub = rospy.Subscriber("/odom", Odometry, self._real_car_odom_callback)
+        self._use_real_car_odom = False
             
     def _ego_tf_pub_callback(self, event):
         if self._ego_odom is None:
@@ -103,6 +105,16 @@ class GazeboManagerNode:
                 self._gt_ego_odom_pub.publish(self._ego_odom)
         self._object_detection_pub.publish(all_detections)
 
+    def _real_car_odom_callback(self, msg):
+        if self._use_real_car_odom:
+            ego_state_msg = State()
+            ego_state_msg.x = msg.pose.pose.position.x
+            ego_state_msg.y = msg.pose.pose.position.y
+            euler = tf.transformations.euler_from_quaternion([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z, msg.pose.pose.orientation.w])
+            ego_state_msg.heading_angle = euler[2]
+            ego_state_msg.velocity = math.sqrt(msg.twist.twist.linear.x**2 + msg.twist.twist.linear.y**2)
+            self._ego_state_pub.publish(ego_state_msg)
+
     def _ego_state_pub_callback(self, event):
         if not self._tf_listener.canTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0)):
             rospy.logwarn("Cannot get transform from map to base_footprint")
@@ -114,12 +126,13 @@ class GazeboManagerNode:
         heading_angle = euler[2]
         while (self._ego_odom is None):
             rospy.sleep(0.1)
-        ego_state_msg = State()
-        ego_state_msg.x = x
-        ego_state_msg.y = y
-        ego_state_msg.heading_angle = heading_angle
-        ego_state_msg.velocity = math.sqrt(self._ego_odom.twist.twist.linear.x**2 + self._ego_odom.twist.twist.linear.y**2)
-        self._ego_state_pub.publish(ego_state_msg)
+        if self._use_real_car_odom == False:
+            ego_state_msg = State()
+            ego_state_msg.x = x
+            ego_state_msg.y = y
+            ego_state_msg.heading_angle = heading_angle
+            ego_state_msg.velocity = math.sqrt(self._ego_odom.twist.twist.linear.x**2 + self._ego_odom.twist.twist.linear.y**2)
+            self._ego_state_pub.publish(ego_state_msg)
         ego_state_odom_msg = Odometry()
         ego_state_odom_msg.header.stamp = rospy.Time.now()
         ego_state_odom_msg.header.frame_id = self._namespaces + "map"
