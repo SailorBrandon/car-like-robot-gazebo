@@ -19,7 +19,9 @@
     <arg name="robot_name_0" default="ego_vehicle"/>
     <arg name="robot_type_0" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
     <group ns="$(arg robot_name_0)">
-        <include file="$(find robot_gazebo)/launch/gmapping.launch" />
+        <include file="$(find robot_gazebo)/launch/gmapping.launch">
+            <arg name="robot_name" value="$(arg robot_name_0)"/>
+        </include>
         <include file="$(find robot_gazebo)/launch/create_robot.launch">
             <arg name="robot_name" value="$(arg robot_name_0)"/>
             <arg name="robot_type" value="$(arg robot_type_0)"/>
@@ -31,5 +33,26 @@
             <arg name="Y_pos" value="0"/>
         </include>
     </group>
+    <remap from="/$(arg robot_name_0)/tf" to="/$(arg robot_name_0)/tf"/>
+    <remap from="/$(arg robot_name_0)/tf_static" to="/$(arg robot_name_0)/tf_static"/>
 
+    <!-- <arg name="robot_name_1" default="obstacle_1"/>
+    <arg name="robot_type_1" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
+    <group ns="$(arg robot_name_1)">
+        <include file="$(find robot_gazebo)/launch/gmapping.launch">
+            <arg name="robot_name" value="$(arg robot_name_1)"/>
+        </include>
+        <include file="$(find robot_gazebo)/launch/create_robot.launch">
+            <arg name="robot_name" value="$(arg robot_name_1)"/>
+            <arg name="robot_type" value="$(arg robot_type_1)"/>
+            <arg name="x_pos" value="2"/>
+            <arg name="y_pos" value="-0.2"/>
+            <arg name="z_pos" value="0"/>
+            <arg name="R_pos" value="0"/>
+            <arg name="P_pos" value="0"/>
+            <arg name="Y_pos" value="0"/>
+        </include>
+    </group>
+    <remap from="/$(arg robot_name_1)/tf" to="/$(arg robot_name_1)/tf"/>
+    <remap from="/$(arg robot_name_1)/tf_static" to="/$(arg robot_name_1)/tf_static"/> -->
 </launch>

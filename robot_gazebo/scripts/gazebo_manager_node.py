@@ -28,7 +28,7 @@ class GazeboManagerNode:
         self._ego_state_pub_timer = rospy.Timer(rospy.Duration(0.1), self._ego_state_pub_callback)
         
         self._ack_sub = rospy.Subscriber("ackermann_cmd_mux/output", AckermannDriveStamped, self.ack_callback)
-        self._cmd_vel_sub = rospy.Subscriber("cmd_vel", Twist, self.cmd_vel_callback)
+        self._cmd_vel_sub = rospy.Subscriber("/cmd_vel", Twist, self.cmd_vel_callback)
 
         self._pub_vel_left_rear_wheel = rospy.Publisher("left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
         self._pub_vel_right_rear_wheel = rospy.Publisher("right_rear_wheel_velocity_controller/command", Float64, queue_size=1)
@@ -37,14 +37,16 @@ class GazeboManagerNode:
         self._pub_pos_left_steering_hinge = rospy.Publisher("left_steering_hinge_position_controller/command", Float64, queue_size=1)
         self._pub_pos_right_steering_hinge = rospy.Publisher("right_steering_hinge_position_controller/command", Float64, queue_size=1)
         self._fac = 31.25
+        
+        self._namespaces = rospy.get_namespace().replace("/", "") + "/"
             
     def _ego_tf_pub_callback(self, event):
         if self._ego_odom is None:
             return
         tf_msg = TransformStamped()
         tf_msg.header.stamp = rospy.Time.now()
-        tf_msg.header.frame_id = "odom"
-        tf_msg.child_frame_id = "base_footprint"
+        tf_msg.header.frame_id = self._namespaces + "odom"
+        tf_msg.child_frame_id = self._namespaces + "base_footprint"
         tf_msg.transform.translation.x = self._ego_odom.pose.pose.position.x
         tf_msg.transform.translation.y = self._ego_odom.pose.pose.position.y
         tf_msg.transform.translation.z = self._ego_odom.pose.pose.position.z
@@ -61,7 +63,7 @@ class GazeboManagerNode:
             if msg.name[i][:len("obstacle")] == "obstacle":
                 detection = ObjectDetection3D()
                 detection.header.stamp = rospy.Time.now()
-                detection.header.frame_id = "map"
+                detection.header.frame_id = self._namespaces + "map"
                 detection.id = 0
                 detection.score = 1.0
                 detection.state.x = msg.pose[i].position.x
@@ -83,8 +85,8 @@ class GazeboManagerNode:
                 all_detections.detections.append(detection)
             if msg.name[i] == "ego_vehicle":
                 self._ego_odom.header.stamp = rospy.Time.now()
-                self._ego_odom.header.frame_id = "odom"
-                self._ego_odom.child_frame_id = "base_footprint"
+                self._ego_odom.header.frame_id = self._namespaces + "odom"
+                self._ego_odom.child_frame_id = self._namespaces + "base_footprint"
                 self._ego_odom.pose.pose.position.x = msg.pose[i].position.x
                 self._ego_odom.pose.pose.position.y = msg.pose[i].position.y
                 self._ego_odom.pose.pose.position.z = msg.pose[i].position.z
@@ -102,11 +104,11 @@ class GazeboManagerNode:
         self._object_detection_pub.publish(all_detections)
 
     def _ego_state_pub_callback(self, event):
-        if not self._tf_listener.canTransform("map", "base_footprint", rospy.Time(0)):
+        if not self._tf_listener.canTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0)):
             rospy.logwarn("Cannot get transform from map to base_footprint")
             return
-        self._tf_listener.waitForTransform("map", "base_footprint", rospy.Time(0), rospy.Duration(5.0))
-        (trans, rot) = self._tf_listener.lookupTransform("map", "base_footprint", rospy.Time(0))
+        self._tf_listener.waitForTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0), rospy.Duration(5.0))
+        (trans, rot) = self._tf_listener.lookupTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0))
         x, y = trans[0], trans[1]
         euler = tf.transformations.euler_from_quaternion(rot)
         heading_angle = euler[2]
@@ -120,8 +122,8 @@ class GazeboManagerNode:
         self._ego_state_pub.publish(ego_state_msg)
         ego_state_odom_msg = Odometry()
         ego_state_odom_msg.header.stamp = rospy.Time.now()
-        ego_state_odom_msg.header.frame_id = "map"
-        ego_state_odom_msg.child_frame_id = "base_footprint"
+        ego_state_odom_msg.header.frame_id = self._namespaces + "map"
+        ego_state_odom_msg.child_frame_id = self._namespaces + "base_footprint"
         ego_state_odom_msg.pose.pose.position.x = x
         ego_state_odom_msg.pose.pose.position.y = y
         ego_state_odom_msg.pose.pose.position.z = 0.0

@@ -4,9 +4,9 @@
 
   <xacro:include filename="$(find robot_gazebo)/urdf/pav_s01/macros.xacro" />
 
-  <link name="base_footprint"/>
+  <link name="$(arg robot_name)/base_footprint"/>
 
-  <link name="base_link">
+  <link name="$(arg robot_name)/base_link">
     <inertial>
       <origin xyz="-0.02 0 0" rpy="0 0 0" />
       <mass value="4" />
@@ -33,13 +33,13 @@
     </collision>
   </link>
 
-  <joint name="base_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
+  <joint name="$(arg robot_name)/base_joint" type="fixed">
+    <parent link="$(arg robot_name)/base_footprint"/>
+    <child link="$(arg robot_name)/base_link"/>
     <origin xyz="0.0 0.0 0.09" rpy="0 0 0"/>
   </joint>
 
-  <link name="shell_link">
+  <link name="$(arg robot_name)/shell_link">
     <visual>
       <origin xyz="0 0 0" rpy="1.57 0 -1.57" />
       <geometry>
@@ -48,14 +48,14 @@
     </visual>
   </link>
 
-  <joint name="shell_link_joint" type="fixed">
-    <parent link="base_link"/>
-    <child link="shell_link"/>
+  <joint name="$(arg robot_name)/shell_link_joint" type="fixed">
+    <parent link="$(arg robot_name)/base_link"/>
+    <child link="$(arg robot_name)/shell_link"/>
     <origin xyz="-0.02 0.0 -0.085" rpy="0 0 0"/>
   </joint>
 
 
-  <link name="right_rear_wheel_link">
+  <link name="$(arg robot_name)/right_rear_wheel_link">
     <inertial>
       <origin xyz="0 0 0 " rpy="0 0 0" />
       <mass value="2" />
@@ -83,15 +83,15 @@
   </link>
 
   <joint name="right_rear_wheel_link_joint" type="continuous">
-    <parent link="base_link" />
-    <child link="right_rear_wheel_link" />
+    <parent link="$(arg robot_name)/base_link" />
+    <child link="$(arg robot_name)/right_rear_wheel_link" />
     <origin xyz="-0.139 -0.09 -0.055" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
   </joint>
   <xacro:wheel_transmission name="right_rear_wheel_link" />
 
-  <link name="left_rear_wheel_link">
+  <link name="$(arg robot_name)/left_rear_wheel_link">
     <inertial>
       <origin xyz="0 0 0 " rpy="0 0 0" />
       <mass value="2" />
@@ -119,15 +119,15 @@
   </link>
 
   <joint name="left_rear_wheel_link_joint" type="continuous">
-    <parent link="base_link" />
-    <child link="left_rear_wheel_link" />
+    <parent link="$(arg robot_name)/base_link" />
+    <child link="$(arg robot_name)/left_rear_wheel_link" />
     <origin xyz="-0.139 0.09 -0.055" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
   </joint>
   <xacro:wheel_transmission name="left_rear_wheel_link" />
 
-  <link name="left_front_steer_hinge_link">
+  <link name="$(arg robot_name)/left_front_steer_hinge_link">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="0.5" />
@@ -160,8 +160,8 @@
 
   <joint name="left_front_steer_hinge_link_joint" type="revolute">
     <origin xyz="0.095 0.065 -0.0525" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="left_front_steer_hinge_link" />
+    <parent link="$(arg robot_name)/base_link" />
+    <child link="$(arg robot_name)/left_front_steer_hinge_link" />
     <axis xyz="0 0 1" />
     <limit lower="-0.6" upper="0.6" effort="5" velocity="1000" />
   </joint>
@@ -169,7 +169,7 @@
 
 
 
-  <link name="right_front_steer_hinge_link">
+  <link name="$(arg robot_name)/right_front_steer_hinge_link">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="0.5" />
@@ -203,8 +203,8 @@
   </link>
 
   <joint name="right_front_steer_hinge_link_joint" type="revolute">
-    <parent link="base_link" />
-    <child link="right_front_steer_hinge_link" />
+    <parent link="$(arg robot_name)/base_link" />
+    <child link="$(arg robot_name)/right_front_steer_hinge_link" />
     <origin xyz="0.095 -0.065 -0.0525" rpy="0 0 0" />
     <axis xyz="0 0 1" />
     <limit lower="-0.6" upper="0.6" effort="5" velocity="1000" />
@@ -212,7 +212,7 @@
   <xacro:steering_hinge_transmission name="right_front_steer_hinge_link" />
 
 
-  <link name="right_front_wheel_link">
+  <link name="$(arg robot_name)/right_front_wheel_link">
     <inertial>
       <origin xyz="0 0 0 " rpy="0 0 0" />
       <mass value="2" />
@@ -240,15 +240,15 @@
   </link>
 
   <joint name="right_front_wheel_link_joint" type="continuous">
-    <parent link="right_front_steer_hinge_link" />
-    <child link="right_front_wheel_link" />
+    <parent link="$(arg robot_name)/right_front_steer_hinge_link" />
+    <child link="$(arg robot_name)/right_front_wheel_link" />
     <origin xyz="0 -0.025 0" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
   </joint>
   <xacro:wheel_transmission name="right_front_wheel_link" />
 
-  <link name="left_front_wheel_link">
+  <link name="$(arg robot_name)/left_front_wheel_link">
     <inertial>
       <origin xyz="0 0 0 " rpy="0 0 0" />
       <mass value="2" />
@@ -276,15 +276,15 @@
   </link>
 
   <joint name="left_front_wheel_link_joint" type="continuous">
-    <parent link="left_front_steer_hinge_link" />
-    <child link="left_front_wheel_link" />
+    <parent link="$(arg robot_name)/left_front_steer_hinge_link" />
+    <child link="$(arg robot_name)/left_front_wheel_link" />
     <origin xyz="0 0.025 0" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
   </joint>
   <xacro:wheel_transmission name="left_front_wheel_link" />
 
-  <link name="camera">
+  <link name="$(arg robot_name)/camera">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="0.22414" />
@@ -302,13 +302,13 @@
   </link>
 
   <joint name="camera_joint" type="fixed">
-    <parent link="base_link" />
-    <child link="camera" />
+    <parent link="$(arg robot_name)/base_link" />
+    <child link="$(arg robot_name)/camera" />
     <origin xyz="0.077 0 0.046" rpy="0 0 0" />
     <axis xyz="0 0 0" />
   </joint>
 
-  <link name="lidar_2d">
+  <link name="$(arg robot_name)/lidar_2d">
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="0" />
@@ -327,12 +327,12 @@
 
   <joint name="laser_joint" type="fixed">
     <origin xyz="-0.02 0 0.12" rpy="0 0 0" />
-    <parent link="base_link" />
-    <child link="lidar_2d" />
+    <parent link="$(arg robot_name)/base_link" />
+    <child link="$(arg robot_name)/lidar_2d" />
     <axis xyz="0 0 0" />
   </joint>
 
-  <link name="imu">
+  <link name="$(arg robot_name)/imu">
     <visual>
       <geometry>
         <box size="0.01 0.01 0.005"/>
@@ -345,8 +345,8 @@
   </link>
 
   <joint name="imu_joint" type="fixed">
-    <parent link="base_link" />
-    <child link="imu" />
+    <parent link="$(arg robot_name)/base_link" />
+    <child link="$(arg robot_name)/imu" />
     <origin xyz="-0.10 0 0.01" />
     <axis xyz="0 0 1" />
   </joint>

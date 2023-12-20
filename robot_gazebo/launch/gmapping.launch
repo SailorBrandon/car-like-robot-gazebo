@@ -1,10 +1,12 @@
 <launch>
+    <arg name="robot_name"/>
+
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
-        <param name="base_frame" value="base_footprint"/>
+        <param name="base_frame" value="$(arg robot_name)/base_footprint"/>
         <!--机器人底盘坐标系基框架，附带在移动底盘的框架，原点-->
-        <param name="odom_frame" value="odom"/>
+        <param name="odom_frame" value="$(arg robot_name)/odom"/>
         <!--里程计坐标系里程计框架，附带在里程计的框架-->
-        <param name="map_frame" value="map"/>
+        <param name="map_frame" value="$(arg robot_name)/map"/>
         <!--地图坐标系地图框架，附带在地图上的框架-->
         <param name="map_update_interval" value="0.01"/>
         <!--地图更新速度，秒0.01-->
