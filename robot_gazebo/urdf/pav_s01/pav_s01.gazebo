@@ -5,8 +5,8 @@
   <!-- Gazebo references -->
 
   <gazebo reference="$(arg robot_name)/base_link">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <material>Gazebo/Green</material>
@@ -16,25 +16,9 @@
     <material>Gazebo/Orange</material>
   </gazebo>
 
-  <gazebo reference="$(arg robot_name)/left_front_steer_hinge_link">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
-    <kp value="10000000.0" />
-    <kd value="1.0" />
-    <material>Gazebo/Black</material>
-  </gazebo>
-
-  <gazebo reference="$(arg robot_name)/right_front_steer_hinge_link">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
-    <kp value="10000000.0" />
-    <kd value="1.0" />
-    <material>Gazebo/Black</material>
-  </gazebo>
-
   <gazebo reference="$(arg robot_name)/left_front_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>
@@ -42,8 +26,8 @@
   </gazebo>
 
   <gazebo reference="$(arg robot_name)/right_front_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>
@@ -51,8 +35,8 @@
   </gazebo>
 
   <gazebo reference="$(arg robot_name)/left_rear_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>
@@ -60,8 +44,8 @@
   </gazebo>
 
   <gazebo reference="$(arg robot_name)/right_rear_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>

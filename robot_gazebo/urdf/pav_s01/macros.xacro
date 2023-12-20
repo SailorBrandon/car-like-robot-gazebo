@@ -29,4 +29,15 @@
   </transmission>
 </xacro:macro>
 
+<xacro:macro name="wheel_friction" params="name">
+  <surface>
+      <friction>
+        <ode>
+            <mu>999999999999999999</mu>
+            <mu2>999999999999999999</mu2>
+        </ode>
+      </friction>
+  </surface>
+</xacro:macro>
+
 </robot>

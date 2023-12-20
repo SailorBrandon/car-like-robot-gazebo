@@ -2,6 +2,10 @@
 
 <robot name="$(arg robot_name)" xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <xacro:property name="M_PI" value="3.141592653589793" />
+  <xacro:property name="rotation_fiction" value="1"/>
+  <xacro:property name="mu" value="9999999999.0"/>
+
   <xacro:include filename="$(find robot_gazebo)/urdf/pav_s01/macros.xacro" />
 
   <link name="$(arg robot_name)/base_footprint"/>
@@ -41,7 +45,7 @@
 
   <link name="$(arg robot_name)/shell_link">
     <visual>
-      <origin xyz="0 0 0" rpy="1.57 0 -1.57" />
+      <origin xyz="0 0 0" rpy="${M_PI/2} 0 -${M_PI/2}" />
       <geometry>
         <mesh filename="package://robot_gazebo/models/robots/pav_s01/shell_pav_s01.STL" scale="0.001 0.001 0.001"/>
       </geometry>
@@ -66,7 +70,7 @@
       <geometry>
         <mesh filename="package://robot_gazebo/models/robots/pav_s01/wheel_link.STL" />
       </geometry>
-      <!-- <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <!-- <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry> -->
@@ -75,11 +79,12 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry>
     </collision>
+    <xacro:wheel_friction name="${mu}" />
   </link>
 
   <joint name="right_rear_wheel_link_joint" type="continuous">
@@ -88,6 +93,7 @@
     <origin xyz="-0.139 -0.09 -0.055" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
+    <dynamics damping="0.0" friction="${rotation_fiction}"/>
   </joint>
   <xacro:wheel_transmission name="right_rear_wheel_link" />
 
@@ -98,11 +104,11 @@
      <inertia ixx="6.79E-04" ixy="0" ixz="0" iyy="6.79E-04" iyz="0" izz="1.25E-03" />
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 3.14" />
+      <origin xyz="0 0 0" rpy="0 0 ${M_PI}" />
       <geometry>
         <mesh filename="package://robot_gazebo/models/robots/pav_s01/wheel_link.STL" />
       </geometry>
-      <!-- <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <!-- <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry> -->
@@ -111,11 +117,12 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry>
     </collision>
+    <xacro:wheel_friction name="${mu}" />
   </link>
 
   <joint name="left_rear_wheel_link_joint" type="continuous">
@@ -124,6 +131,7 @@
     <origin xyz="-0.139 0.09 -0.055" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
+    <dynamics damping="0.0" friction="${rotation_fiction}"/>
   </joint>
   <xacro:wheel_transmission name="left_rear_wheel_link" />
 
@@ -138,7 +146,7 @@
       <geometry>
         <mesh filename="package://robot_gazebo/models/robots/pav_s01/steer_hinge_link.STL" />
       </geometry>
-      <!-- <origin xyz="0.0 0.0 0.0" rpy="1.57 0.0 0.0" />
+      <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
       <geometry>
           <cylinder radius="0.01" length="0.005" />
       </geometry> -->
@@ -154,7 +162,7 @@
       <geometry>
           <cylinder radius="0.01" length="0.005" />
       </geometry>
-      <origin xyz="0.0 0.0 0.0" rpy="1.57 0.0 0.0" />
+      <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
     </collision>
   </link>
 
@@ -180,7 +188,7 @@
       <geometry>
         <mesh filename="package://robot_gazebo/models/robots/pav_s01/steer_hinge_link.STL" />
       </geometry>
-      <!-- <origin xyz="0.0 0.0 0.0" rpy="1.57 0.0 0.0" />
+      <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
       <geometry>
           <cylinder radius="0.01" length="0.005" />
       </geometry> -->
@@ -198,7 +206,7 @@
         <geometry>
             <cylinder radius="0.01" length="0.005" />
         </geometry>
-        <origin xyz="0.0 0.0 0.0" rpy="1.57 0.0 0.0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
       </collision>
   </link>
 
@@ -223,7 +231,7 @@
       <geometry>
         <mesh filename="package://robot_gazebo/models/robots/pav_s01/wheel_link.STL" />
       </geometry>
-      <!-- <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <!-- <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry> -->
@@ -232,11 +240,12 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry>
     </collision>
+    <xacro:wheel_friction name="${mu}" />
   </link>
 
   <joint name="right_front_wheel_link_joint" type="continuous">
@@ -245,6 +254,7 @@
     <origin xyz="0 -0.025 0" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
+    <dynamics damping="0.0" friction="${rotation_fiction}"/>
   </joint>
   <xacro:wheel_transmission name="right_front_wheel_link" />
 
@@ -255,11 +265,11 @@
       <inertia ixx="6.79E-04" ixy="0" ixz="0" iyy="6.79E-04" iyz="0" izz="1.25E-03" />
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 3.14" />
+      <origin xyz="0 0 0" rpy="0 0 ${M_PI}" />
       <geometry>
         <mesh filename="package://robot_gazebo/models/robots/pav_s01/wheel_link.STL" />
       </geometry>
-      <!-- <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <!-- <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry> -->
@@ -268,11 +278,12 @@
       </material>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="1.57 0 0" />
+      <origin xyz="0 0 0" rpy="${M_PI/2} 0 0" />
       <geometry>
         <cylinder radius="0.035" length="0.02" />
       </geometry>
     </collision>
+    <xacro:wheel_friction name="${mu}" />
   </link>
 
   <joint name="left_front_wheel_link_joint" type="continuous">
@@ -281,6 +292,7 @@
     <origin xyz="0 0.025 0" rpy="0 0 0" />
     <axis xyz="0 1 0" />
     <limit effort="10" velocity="1000" />
+    <dynamics damping="0.0" friction="${rotation_fiction}"/>
   </joint>
   <xacro:wheel_transmission name="left_front_wheel_link" />
 
