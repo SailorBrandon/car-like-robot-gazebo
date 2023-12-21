@@ -56,5 +56,5 @@
     <remap from="/$(arg robot_name_1)/tf" to="/$(arg robot_name_1)/tf"/>
     <remap from="/$(arg robot_name_1)/tf_static" to="/$(arg robot_name_1)/tf_static"/> -->
 
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_gazebo)/rviz/perception.rviz"/>
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_gazebo)/rviz/perception.rviz"/> -->
 </launch>

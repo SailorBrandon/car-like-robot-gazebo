@@ -1,12 +1,13 @@
 Panels:
   - Class: rviz/Displays
-    Help Height: 138
+    Help Height: 0
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /ProjectedIMg1
       Splitter Ratio: 0.5
-    Tree Height: 396
+    Tree Height: 534
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -24,7 +25,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: Image
+    SyncSource: FilteredPoints
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -102,7 +103,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: RGB8
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -117,7 +118,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Angle Tolerance: 0.10000000149011612
       Class: rviz/Odometry
       Covariance:
@@ -179,21 +180,21 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: FilteredPoints
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
       Size (m): 0.009999999776482582
       Style: Flat Squares
-      Topic: /transformed_cloud
+      Topic: /ego_vehicle/object_detector/filtered_cloud
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /bounding_box_markers
+      Marker Topic: /ego_vehicle/object_detector/markers
       Name: BBoxLidar
       Namespaces:
         object_clusters: true
@@ -201,7 +202,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /projected_image
+      Image Topic: /ego_vehicle/object_detector/projected_image
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -239,7 +240,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 2.14806866645813
+      Distance: 3.3800272941589355
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -247,17 +248,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.40528130531311035
-        Y: 0.16855250298976898
-        Z: 0.7406859993934631
+        X: 0.3970676362514496
+        Y: 0.4815487861633301
+        Z: 0.9419620037078857
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.07539908587932587
+      Pitch: 0.24539907276630402
       Target Frame: <Fixed Frame>
-      Yaw: 3.475417137145996
+      Yaw: 2.4604175090789795
     Saved: ~
 Window Geometry:
   Displays:

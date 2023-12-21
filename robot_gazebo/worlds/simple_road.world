@@ -32,76 +32,305 @@
       <static>true</static>
     </model>
 
-    <road name="straight_road">
-      <width>1</width>
-      <point>-10 0 0</point>
-      <point>10 0 0</point>
+    <road name="road_intersection_1">
+      <width>0.7</width>
+      <point>-2.5 2.15 0</point>
+      <point>-1.8 2.15 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
     </road>
 
-    <model name="npc_10">
+    <road name="road_intersection_2">
+      <width>0.7</width>
+      <point>-0.35 2.15 0</point>
+      <point>0.35 2.15 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_intersection_3">
+      <width>0.7</width>
+      <point>1.8 2.15 0</point>
+      <point>2.5 2.15 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_intersection_4">
+      <width>0.7</width>
+      <point>-2.5 0 0</point>
+      <point>-1.8 0 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_intersection_5">
+      <width>0.7</width>
+      <point>-0.35 0 0</point>
+      <point>0.35 0 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_intersection_6">
+      <width>0.7</width>
+      <point>1.8 0 0</point>
+      <point>2.5 0 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_intersection_7">
+      <width>0.7</width>
+      <point>-2.5 -2.15 0</point>
+      <point>-1.8 -2.15 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_intersection_8">
+      <width>0.7</width>
+      <point>-0.35 -2.15 0</point>
+      <point>0.35 -2.15 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_intersection_9">
+      <width>0.7</width>
+      <point>1.8 -2.15 0</point>
+      <point>2.5 -2.15 0</point>
+      <material>
+        <script>
+          <uri>file://media/materials/scripts/gazebo.material</uri>
+          <name>Gazebo/Residential</name>
+        </script>
+      </material>
+    </road>
+
+    <road name="road_h_1">
+      <width>0.7</width>
+      <point>-1.8 2.15 0</point>
+      <point>-0.35 2.15 0</point>
+    </road>
+
+    <road name="road_h_2">
+      <width>0.7</width>
+      <point>0.35 2.15 0</point>
+      <point>1.8 2.15 0</point>
+    </road>
+
+    <road name="road_h_3">
+      <width>0.7</width>
+      <point>-1.8 0 0</point>
+      <point>-0.35 0 0</point>
+    </road>
+
+    <road name="road_h_4">
+      <width>0.7</width>
+      <point>0.35 0 0</point>
+      <point>1.8 0 0</point>
+    </road>
+
+    <road name="road_h_5">
+      <width>0.7</width>
+      <point>-1.8 -2.15 0</point>
+      <point>-0.35 -2.15 0</point>
+    </road>
+
+    <road name="road_h_6">
+      <width>0.7</width>
+      <point>0.35 -2.15 0</point>
+      <point>1.8 -2.15 0</point>
+    </road>
+
+    <road name="road_v_1">
+      <width>0.7</width>
+      <point>2.15 0.35 0</point>
+      <point>2.15 1.8 0</point>
+    </road>
+
+    <road name="road_v_2">
+      <width>0.7</width>
+      <point>2.15 -1.8 0</point>
+      <point>2.15 -0.35 0</point>
+    </road>
+
+    <road name="road_v_3">
+      <width>0.7</width>
+      <point>0 0.35 0</point>
+      <point>0 1.8 0</point>
+    </road>
+
+    <road name="road_v_4">
+      <width>0.7</width>
+      <point>0 -1.8 0</point>
+      <point>0 -0.35 0</point>
+    </road>
+
+    <road name="road_v_5">
+      <width>0.7</width>
+      <point>-2.15 0.35 0</point>
+      <point>-2.15 1.8 0</point>
+    </road>
+
+    <road name="road_v_6">
+      <width>0.7</width>
+      <point>-2.15 -1.8 0</point>
+      <point>-2.15 -0.35 0</point>
+    </road>
+
+    <model name="wall_h_1">
       <static>true</static>
-      <pose>1.5 -0.25 0.15 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <pose>0 2.55 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
       <link name="link">
         <collision name="collision">
           <geometry>
             <box>
-              <size>0.4 0.2 0.3</size>              <!-- Length, Width, Height -->
+              <size>5 0.03 0.4</size>              <!-- Length, Width, Height -->
             </box>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <box>
-             <size>0.4 0.2 0.3</size>
+              <size>5 0.03 0.4</size>
             </box>
           </geometry>
         </visual>
       </link>
     </model>
 
-    <!-- Define walls -->
-    <!-- Wall on one side of the road -->
-    <model name="left_wall">
+    <model name="wall_h_2">
       <static>true</static>
-      <pose>0 0.6 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <pose>0 -2.55 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
       <link name="link">
         <collision name="collision">
           <geometry>
             <box>
-              <size>20 0.05 0.4</size>              <!-- Length, Width, Height -->
+              <size>5 0.03 0.4</size>              <!-- Length, Width, Height -->
             </box>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <box>
-              <size>20 0.05 0.4</size>
+              <size>5 0.03 0.4</size>
             </box>
           </geometry>
         </visual>
       </link>
     </model>
 
-    <!-- Wall on the other side of the road -->
-    <model name="right_wall">
+    <model name="wall_v_1">
       <static>true</static>
-      <pose>0 -0.6 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <pose>-2.55 0 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
       <link name="link">
         <collision name="collision">
           <geometry>
             <box>
-              <size>20 0.05 0.4</size>
+              <size>0.03 5 0.4</size>              <!-- Length, Width, Height -->
             </box>
           </geometry>
         </collision>
         <visual name="visual">
           <geometry>
             <box>
-              <size>20 0.05 0.4</size>
+              <size>0.03 5 0.4</size>
             </box>
           </geometry>
         </visual>
       </link>
     </model>
+
+    <model name="wall_v_2">
+      <static>true</static>
+      <pose>2.55 0 0.2 0 0 0</pose>      <!-- Adjust pose to align with the road -->
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.03 5 0.4</size>              <!-- Length, Width, Height -->
+            </box>
+          </geometry>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.03 5 0.4</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+    </model>
+
+    <include>
+      <name>house_1_1</name>
+      <uri>model://ISCAS/house_1</uri>
+      <pose>-1 1 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>house_1_2</name>
+      <uri>model://ISCAS/house_2</uri>
+      <pose>1 1 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>house_2_1</name>
+      <uri>model://ISCAS/house_3</uri>
+      <pose>-0.8 -1.1 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>car_1</name>
+      <uri>model://ISCAS/suv</uri>
+      <pose>0.66 -0.58 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>car_2</name>
+      <uri>model://ISCAS/hatchback</uri>
+      <pose>0.66 -0.88 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <name>car_3</name>
+      <uri>model://ISCAS/hatchback_red</uri>
+      <pose>0.66 -1.4 0 0 0 0</pose>
+    </include>
+
   </world>
 </sdf>
