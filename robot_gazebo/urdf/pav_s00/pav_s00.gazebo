@@ -4,71 +4,59 @@
 
   <!-- Gazebo references -->
 
-  <gazebo reference="base_link">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
+  <gazebo reference="$(arg robot_name)/base_link">
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <material>Gazebo/Green</material>
   </gazebo>
 
-  <gazebo reference="shell_link">
+  <gazebo reference="$(arg robot_name)/shell_link">
     <material>Gazebo/Orange</material>
   </gazebo>
 
-  <gazebo reference="left_front_steer_hinge_link">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
-    <kp value="10000000.0" />
-    <kd value="1.0" />
-    <material>Gazebo/Black</material>
-  </gazebo>
-
-  <gazebo reference="right_front_steer_hinge_link">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
-    <kp value="10000000.0" />
-    <kd value="1.0" />
-    <material>Gazebo/Black</material>
-  </gazebo>
-
-  <gazebo reference="left_front_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+  <gazebo reference="$(arg robot_name)/left_front_wheel_link">
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="right_front_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+  <gazebo reference="$(arg robot_name)/right_front_wheel_link">
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="left_rear_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+  <gazebo reference="$(arg robot_name)/left_rear_wheel_link">
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="right_rear_wheel_link">
-    <mu1 value="2.0"/>
-    <mu2 value="2.0"/>
+  <gazebo reference="$(arg robot_name)/right_rear_wheel_link">
+    <mu1 value="${mu}"/>
+    <mu2 value="${mu}"/>
     <kp value="10000000.0" />
     <kd value="1.0" />
     <fdir1 value="1 0 0"/>
     <material>Gazebo/Black</material>
   </gazebo>
 
-  <gazebo reference="camera">
+  <gazebo reference="$(arg robot_name)/lidar_2d">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+  <gazebo reference="$(arg robot_name)/camera">
     <material>Gazebo/Grey</material>
   </gazebo>
 
@@ -82,7 +70,7 @@
     </plugin>
   </gazebo>
 
-  <gazebo reference="camera">
+  <gazebo reference="$(arg robot_name)/camera">
     <sensor type="depth" name="camera">
       <always_on>true</always_on>
       <update_rate>20.0</update_rate>
@@ -107,7 +95,7 @@
         <pointCloudTopicName>depth/points</pointCloudTopicName>
         <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>
         <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>
-        <frameName>realsense_depth</frameName>
+        <frameName>$(arg robot_name)/depth_camera</frameName>
         <baseline>0.1</baseline>
         <distortion_k1>0.0</distortion_k1>
         <distortion_k2>0.0</distortion_k2>
@@ -119,7 +107,7 @@
     </sensor>
   </gazebo>
 
-  <gazebo reference="imu">
+  <gazebo reference="$(arg robot_name)/imu">
     <gravity>true</gravity>
     <sensor name="imu_sensor" type="imu">
       <always_on>true</always_on>
@@ -133,7 +121,7 @@
         <gaussianNoise>0.0</gaussianNoise>
         <xyzOffset>0 0 0</xyzOffset>
         <rpyOffset>0 0 0</rpyOffset>
-        <frameName>imu</frameName>
+        <frameName>$(arg robot_name)/imu</frameName>
       </plugin>
       <pose>0 0 0 0 0 0</pose>
     </sensor>
