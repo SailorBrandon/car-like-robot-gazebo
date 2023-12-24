@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /ProjectedIMg1
       Splitter Ratio: 0.5
     Tree Height: 534
   - Class: rviz/Selection
@@ -25,7 +24,7 @@ Panels:
   - Class: rviz/Time
     Name: Time
     SyncMode: 0
-    SyncSource: FilteredPoints
+    SyncSource: DepthCamera
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -63,7 +62,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -78,7 +77,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Class: rviz/Image
       Enabled: false
       Image Topic: /ego_vehicle/depth_camera/rgb/image_raw
@@ -101,9 +100,9 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz/PointCloud2
       Color: 255; 255; 255
-      Color Transformer: RGB8
+      Color Transformer: Intensity
       Decay Time: 0
-      Enabled: false
+      Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -118,7 +117,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: false
+      Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz/Odometry
       Covariance:
@@ -197,7 +196,7 @@ Visualization Manager:
       Marker Topic: /ego_vehicle/object_detector/markers
       Name: BBoxLidar
       Namespaces:
-        object_clusters: true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Image
@@ -216,7 +215,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: ego_vehicle/odom
+    Fixed Frame: ego_vehicle/base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -240,7 +239,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.3800272941589355
+      Distance: 12.540485382080078
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -248,17 +247,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.3970676362514496
-        Y: 0.4815487861633301
-        Z: 0.9419620037078857
+        X: 1.147672176361084
+        Y: -0.4508039653301239
+        Z: 1.0830187797546387
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.24539907276630402
+      Pitch: 0.055399537086486816
       Target Frame: <Fixed Frame>
-      Yaw: 2.4604175090789795
+      Yaw: 1.1154166460037231
     Saved: ~
 Window Geometry:
   Displays:

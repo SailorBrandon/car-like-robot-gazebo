@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="world" default="simple_road" doc="ISCAS_building, ROS-Academy, simple_road"/>
+    <arg name="world" default="simple_road_v1" doc="ISCAS_building, ROS-Academy, simple_road, simple_road"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="true"/>
     <arg name="gui" default="true"/>
@@ -16,7 +16,7 @@
         <arg name="world_name" value="$(find robot_gazebo)/worlds/$(arg world).world"/>
     </include>
 
-    <arg name="robot_name_0" default="ego_vehicle"/>
+    <!-- <arg name="robot_name_0" default="ego_vehicle"/>
     <arg name="robot_type_0" default="pav_s00" doc="pav_s00, pav_s01, pav_s01_scaled"/>
     <group ns="$(arg robot_name_0)">
         <include file="$(find robot_gazebo)/launch/gmapping.launch">
@@ -34,7 +34,7 @@
         </include>
     </group>
     <remap from="/$(arg robot_name_0)/tf" to="/$(arg robot_name_0)/tf"/>
-    <remap from="/$(arg robot_name_0)/tf_static" to="/$(arg robot_name_0)/tf_static"/>
+    <remap from="/$(arg robot_name_0)/tf_static" to="/$(arg robot_name_0)/tf_static"/> -->
 
     <!-- <arg name="robot_name_1" default="npc_0"/>
     <arg name="robot_type_1" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
@@ -56,5 +56,5 @@
     <remap from="/$(arg robot_name_1)/tf" to="/$(arg robot_name_1)/tf"/>
     <remap from="/$(arg robot_name_1)/tf_static" to="/$(arg robot_name_1)/tf_static"/> -->
 
-    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_gazebo)/rviz/perception.rviz"/> -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find robot_gazebo)/rviz/perception.rviz"/>
 </launch>
