@@ -9,11 +9,14 @@ from geometry_msgs.msg import TransformStamped, Twist
 from gazebo_msgs.msg import ModelStates
 from ackermann_msgs.msg import AckermannDriveStamped
 from std_msgs.msg import Float64
+from sensor_msgs.msg import PointCloud2, LaserScan
+from sensor_msgs import point_cloud2 as pc2
+from iss_manager.srv import SetGoal
 
 class GazeboManagerNode:
     def __init__(self) -> None:
         self._gt_ego_odom_pub = rospy.Publisher("ego_odom", Odometry, queue_size=1)
-        self._ego_state_pub_odom = rospy.Publisher("ego_state_estimation_odom", Odometry, queue_size=1)
+        self._ego_state_pub_odom = rospy.Publisher("ego_state_estimation_odom_msg", Odometry, queue_size=1)
         self._ego_state_pub = rospy.Publisher("ego_state_estimation", State, queue_size=1)
         self._object_detection_pub = rospy.Publisher("object_detection", ObjectDetection3DArray, queue_size=1)
         
@@ -27,8 +30,8 @@ class GazeboManagerNode:
         self._tf_listener = tf.TransformListener()
         self._ego_state_pub_timer = rospy.Timer(rospy.Duration(0.1), self._ego_state_pub_callback)
         
-        self._ack_sub = rospy.Subscriber("ackermann_cmd_mux/output", AckermannDriveStamped, self.ack_callback)
-        self._cmd_vel_sub = rospy.Subscriber("/cmd_vel", Twist, self.cmd_vel_callback)
+        self._ack_sub = rospy.Subscriber("ackermann_cmd_mux/output", AckermannDriveStamped, self._ack_callback)
+        self._cmd_vel_sub = rospy.Subscriber("/cmd_vel", Twist, self._cmd_vel_callback)
 
         self._pub_vel_left_rear_wheel = rospy.Publisher("left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
         self._pub_vel_right_rear_wheel = rospy.Publisher("right_rear_wheel_velocity_controller/command", Float64, queue_size=1)
@@ -39,8 +42,50 @@ class GazeboManagerNode:
         self._fac = 31.25
         
         self._namespaces = rospy.get_namespace().replace("/", "") + "/"
-        self._real_car_odom_sub = rospy.Subscriber("/odom", Odometry, self._real_car_odom_callback)
         self._use_real_car_odom = False
+        if self._use_real_car_odom:
+            self._real_car_odom_sub = rospy.Subscriber("/odom", Odometry, self._real_car_odom_callback)
+        
+        self._velodyne_sub = rospy.Subscriber("/velodyne_points", PointCloud2, self._velodyne_callback)
+        self._2d_laser_scan_pub = rospy.Publisher("scan", LaserScan, queue_size=1)
+        
+        rospy.sleep(5)
+        self._call_set_goal_srv()
+    
+    
+    def _call_set_goal_srv(self):
+        x = 1
+        y = -0.2
+        heading_angle = 0
+        rospy.wait_for_service('planning/set_goal')
+        try:
+            set_goal = rospy.ServiceProxy('planning/set_goal', SetGoal)
+            resp = set_goal(x, y, heading_angle)
+            return resp.success
+        except rospy.ServiceException as e:
+            print("Service call failed: %s"%e)
+            return False
+    
+    def _velodyne_callback(self, point_cloud_msg):
+        laser_scan = LaserScan()
+        laser_scan.header = point_cloud_msg.header
+        laser_scan.angle_min = -math.pi
+        laser_scan.angle_max = math.pi
+        laser_scan.angle_increment = math.pi / 180
+        laser_scan.time_increment = 0
+        laser_scan.range_min = 0.0
+        laser_scan.range_max = 100.0
+        laser_scan.ranges = [float('Inf')] * 360
+        for p in pc2.read_points(point_cloud_msg, field_names=("x", "y", "z"), skip_nans=True):
+            if p[2] < -0.15:
+                continue
+            angle = math.atan2(p[1], p[0])
+            distance = math.sqrt(p[0]**2 + p[1]**2)
+            index = int((angle - laser_scan.angle_min) / laser_scan.angle_increment)
+            if 0 <= index < len(laser_scan.ranges) and distance < laser_scan.ranges[index]:
+                laser_scan.ranges[index] = distance
+        self._2d_laser_scan_pub.publish(laser_scan)
+        
             
     def _ego_tf_pub_callback(self, event):
         if self._ego_odom is None:
@@ -121,8 +166,12 @@ class GazeboManagerNode:
             return
         self._tf_listener.waitForTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0), rospy.Duration(5.0))
         (trans, rot) = self._tf_listener.lookupTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0))
-        x, y = trans[0], trans[1]
-        euler = tf.transformations.euler_from_quaternion(rot)
+        # x, y = trans[0], trans[1] #TODO: use slam or odom?
+        # euler = tf.transformations.euler_from_quaternion(rot)
+        # heading_angle = euler[2]
+        x = self._ego_odom.pose.pose.position.x
+        y = self._ego_odom.pose.pose.position.y
+        euler = tf.transformations.euler_from_quaternion([self._ego_odom.pose.pose.orientation.x, self._ego_odom.pose.pose.orientation.y, self._ego_odom.pose.pose.orientation.z, self._ego_odom.pose.pose.orientation.w])
         heading_angle = euler[2]
         while (self._ego_odom is None):
             rospy.sleep(0.1)
@@ -152,7 +201,7 @@ class GazeboManagerNode:
         ego_state_odom_msg.twist.twist.angular.z = self._ego_odom.twist.twist.angular.z
         self._ego_state_pub_odom.publish(ego_state_odom_msg)
         
-    def ack_callback(self, msg):
+    def _ack_callback(self, msg):
         vel_left_rear_wheel = Float64()
         vel_right_rear_wheel = Float64()
         vel_left_front_wheel = Float64()
@@ -174,13 +223,13 @@ class GazeboManagerNode:
         self._pub_pos_left_steering_hinge.publish(pos_left_steering_hinge)
         self._pub_pos_right_steering_hinge.publish(pos_right_steering_hinge)
 
-    def cmd_vel_callback(self, msg):
+    def _cmd_vel_callback(self, msg):
         speed = msg.linear.x
         steering_angle = msg.angular.z
         ack_msg = AckermannDriveStamped()
         ack_msg.drive.speed = speed
         ack_msg.drive.steering_angle = steering_angle
-        self.ack_callback(ack_msg)
+        self._ack_callback(ack_msg)
 
 if __name__ == "__main__":
     rospy.init_node("gazebo_manager_node", anonymous=True)
