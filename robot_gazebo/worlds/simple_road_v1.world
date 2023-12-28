@@ -156,7 +156,7 @@
     <include>
       <name>npc_6</name>
       <uri>model://ISCAS/suv</uri>
-      <pose>0.175 2 0 0 0 1.57</pose>
+      <pose>0.175 2.5 0 0 0 1.57</pose>
     </include>
 
     <include>
@@ -165,11 +165,11 @@
       <pose>-1.8 1 0 0 0 -1.57</pose>
     </include>
 
-    <include>
+    <!-- <include>
       <name>npc_8</name>
       <uri>model://ISCAS/hatchback_red</uri>
       <pose>1.2 -0.175 0 0 0 0</pose>
-    </include>
+    </include> -->
 
     <include>
       <name>npc_9</name>

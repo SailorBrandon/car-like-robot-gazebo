@@ -161,14 +161,16 @@ class GazeboManagerNode:
             self._ego_state_pub.publish(ego_state_msg)
 
     def _ego_state_pub_callback(self, event):
-        if not self._tf_listener.canTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0)):
-            rospy.logwarn("Cannot get transform from map to base_footprint")
-            return
-        self._tf_listener.waitForTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0), rospy.Duration(5.0))
-        (trans, rot) = self._tf_listener.lookupTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0))
+        # if not self._tf_listener.canTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0)):
+        #     rospy.logwarn("Cannot get transform from map to base_footprint")
+        #     return
+        # self._tf_listener.waitForTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0), rospy.Duration(5.0))
+        # (trans, rot) = self._tf_listener.lookupTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0))
         # x, y = trans[0], trans[1] #TODO: use slam or odom?
         # euler = tf.transformations.euler_from_quaternion(rot)
         # heading_angle = euler[2]
+        if self._ego_odom is None:
+            return
         x = self._ego_odom.pose.pose.position.x
         y = self._ego_odom.pose.pose.position.y
         euler = tf.transformations.euler_from_quaternion([self._ego_odom.pose.pose.orientation.x, self._ego_odom.pose.pose.orientation.y, self._ego_odom.pose.pose.orientation.z, self._ego_odom.pose.pose.orientation.w])
@@ -177,29 +179,33 @@ class GazeboManagerNode:
             rospy.sleep(0.1)
         if self._use_real_car_odom == False:
             ego_state_msg = State()
+            ego_state_msg.header.frame_id = self._namespaces + "odom"
+            # ego_state_msg.header.frame_id = self._namespaces + "map"
+            ego_state_msg.header.stamp = rospy.Time.now()
             ego_state_msg.x = x
             ego_state_msg.y = y
             ego_state_msg.heading_angle = heading_angle
             ego_state_msg.velocity = math.sqrt(self._ego_odom.twist.twist.linear.x**2 + self._ego_odom.twist.twist.linear.y**2)
             self._ego_state_pub.publish(ego_state_msg)
-        ego_state_odom_msg = Odometry()
-        ego_state_odom_msg.header.stamp = rospy.Time.now()
-        ego_state_odom_msg.header.frame_id = self._namespaces + "map"
-        ego_state_odom_msg.child_frame_id = self._namespaces + "base_footprint"
-        ego_state_odom_msg.pose.pose.position.x = x
-        ego_state_odom_msg.pose.pose.position.y = y
-        ego_state_odom_msg.pose.pose.position.z = 0.0
-        ego_state_odom_msg.pose.pose.orientation.x = rot[0]
-        ego_state_odom_msg.pose.pose.orientation.y = rot[1]
-        ego_state_odom_msg.pose.pose.orientation.z = rot[2]
-        ego_state_odom_msg.pose.pose.orientation.w = rot[3]
-        ego_state_odom_msg.twist.twist.linear.x = self._ego_odom.twist.twist.linear.x
-        ego_state_odom_msg.twist.twist.linear.y = self._ego_odom.twist.twist.linear.y
-        ego_state_odom_msg.twist.twist.linear.z = self._ego_odom.twist.twist.linear.z
-        ego_state_odom_msg.twist.twist.angular.x = self._ego_odom.twist.twist.angular.x
-        ego_state_odom_msg.twist.twist.angular.y = self._ego_odom.twist.twist.angular.y
-        ego_state_odom_msg.twist.twist.angular.z = self._ego_odom.twist.twist.angular.z
-        self._ego_state_pub_odom.publish(ego_state_odom_msg)
+        # ego_state_odom_msg = Odometry()
+        # ego_state_odom_msg.header.stamp = rospy.Time.now()
+        # ego_state_odom_msg.header.frame_id = self._namespaces + "odom"
+        # # ego_state_odom_msg.header.frame_id = self._namespaces + "map"
+        # ego_state_odom_msg.child_frame_id = self._namespaces + "base_footprint"
+        # ego_state_odom_msg.pose.pose.position.x = x
+        # ego_state_odom_msg.pose.pose.position.y = y
+        # ego_state_odom_msg.pose.pose.position.z = 0.0
+        # ego_state_odom_msg.pose.pose.orientation.x = rot[0]
+        # ego_state_odom_msg.pose.pose.orientation.y = rot[1]
+        # ego_state_odom_msg.pose.pose.orientation.z = rot[2]
+        # ego_state_odom_msg.pose.pose.orientation.w = rot[3]
+        # ego_state_odom_msg.twist.twist.linear.x = self._ego_odom.twist.twist.linear.x
+        # ego_state_odom_msg.twist.twist.linear.y = self._ego_odom.twist.twist.linear.y
+        # ego_state_odom_msg.twist.twist.linear.z = self._ego_odom.twist.twist.linear.z
+        # ego_state_odom_msg.twist.twist.angular.x = self._ego_odom.twist.twist.angular.x
+        # ego_state_odom_msg.twist.twist.angular.y = self._ego_odom.twist.twist.angular.y
+        # ego_state_odom_msg.twist.twist.angular.z = self._ego_odom.twist.twist.angular.z
+        # self._ego_state_pub_odom.publish(ego_state_odom_msg)
         
     def _ack_callback(self, msg):
         vel_left_rear_wheel = Float64()

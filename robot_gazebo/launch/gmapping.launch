@@ -1,7 +1,7 @@
 <launch>
     <arg name="robot_name"/>
-
-    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+    <!-- TODO: output redirection of this node -->
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping"> 
         <param name="base_frame" value="$(arg robot_name)/base_footprint"/>
         <!--机器人底盘坐标系基框架，附带在移动底盘的框架，原点-->
         <param name="odom_frame" value="$(arg robot_name)/odom"/>
