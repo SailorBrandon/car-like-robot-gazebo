@@ -54,7 +54,7 @@ class GazeboManagerNode:
     
     
     def _call_set_goal_srv(self):
-        x = 1
+        x = 2
         y = -0.2
         heading_angle = 0
         rospy.wait_for_service('planning/set_goal')

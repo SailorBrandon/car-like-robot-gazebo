@@ -26,7 +26,7 @@
             <arg name="robot_name" value="$(arg robot_name_0)"/>
             <arg name="robot_type" value="$(arg robot_type_0)"/>
             <arg name="x_pos" value="2"/>
-            <arg name="y_pos" value="0.2"/>
+            <arg name="y_pos" value="0.17"/>
             <arg name="z_pos" value="0"/>
             <arg name="R_pos" value="0"/>
             <arg name="P_pos" value="0"/>
