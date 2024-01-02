@@ -3,7 +3,7 @@
 import math
 import rospy
 import tf
-from iss_manager.msg import State, ObjectDetection3D, ObjectDetection3DArray, ctrl_msg
+from iss_manager.msg import State, ObjectDetection3D, ObjectDetection3DArray, ControlCommand
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped, Twist
 from gazebo_msgs.msg import ModelStates
@@ -39,8 +39,8 @@ class GazeboManagerNode:
         self._ego_state_pub_timer = rospy.Timer(
             rospy.Duration(0.1), self._ego_state_pub_callback)
 
-        self._cmd_vel_sub = rospy.Subscriber(rospy.get_param(
-            "control_command_topic"), Twist, self._cmd_vel_callback)
+        self._control_cmd_sub = rospy.Subscriber(rospy.get_param(
+            "control_command_topic"), ControlCommand, self._ctrl_cmd_callback)
         self._pub_vel_left_rear_wheel = rospy.Publisher(
             "left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
         self._pub_vel_right_rear_wheel = rospy.Publisher(
@@ -173,9 +173,9 @@ class GazeboManagerNode:
             self._ego_odom.twist.twist.linear.x**2 + self._ego_odom.twist.twist.linear.y**2)
         self._ego_state_pub.publish(ego_state_msg)
 
-    def _cmd_vel_callback(self, msg):
-        speed = msg.linear.x
-        steering_angle = msg.angular.z
+    def _ctrl_cmd_callback(self, msg):
+        speed = msg.throttle
+        steering_angle = msg.steering
         vel_left_rear_wheel = Float64()
         vel_right_rear_wheel = Float64()
         vel_left_front_wheel = Float64()
