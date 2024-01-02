@@ -14,7 +14,7 @@ from sensor_msgs import point_cloud2 as pc2
 from iss_manager.srv import SetGoal
 
 
-class GazeboManagerNode:
+class GazeboBridgeNode:
     def __init__(self) -> None:
         self._ego_vehicle_name = rospy.get_param("robot_name", "ego_vehicle")
         self._namespaces = rospy.get_namespace().replace("/", "") + "/"
@@ -198,5 +198,5 @@ class GazeboManagerNode:
 
 if __name__ == "__main__":
     rospy.init_node("gazebo_manager_node")
-    gazebo_bridge = GazeboManagerNode()
+    gazebo_bridge = GazeboBridgeNode()
     rospy.spin()

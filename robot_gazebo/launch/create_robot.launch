@@ -30,6 +30,6 @@
 
     <rosparam file="$(find robot_gazebo)/config/gazebo_bridge.yaml" command="load"/>
     <param name="robot_name" value="$(arg robot_name)"/>
-    <node name="gazebo_manager_node" pkg="robot_gazebo" type="gazebo_manager_node.py" output="screen"/>
+    <node name="gazebo_bridge_node" pkg="robot_gazebo" type="gazebo_bridge_node.py" output="screen"/>
 
 </launch>

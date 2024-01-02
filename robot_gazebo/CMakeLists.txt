@@ -25,6 +25,6 @@ catkin_package(
 )
 
 catkin_install_python(PROGRAMS
-  scripts/gazebo_manager_node.py
+  scripts/gazebo_bridge_node.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
