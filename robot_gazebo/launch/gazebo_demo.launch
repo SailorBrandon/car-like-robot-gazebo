@@ -16,43 +16,61 @@
         <arg name="world_name" value="$(find robot_gazebo)/worlds/$(arg world).world"/>
     </include>
 
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find iss_manager)/rviz/gazebo_demo.rviz"/>
+
     <arg name="robot_name_0" default="ego_vehicle"/>
-    <arg name="robot_type_0" default="pav_s00" doc="pav_s00, pav_s01, pav_s01_scaled"/>
+    <arg name="robot_type_0" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
+    <arg name="x_pos_0" default="-1.8"/>
+    <arg name="y_pos_0" default="2"/>
+    <arg name="z_pos_0" default="0"/>
+    <arg name="R_pos_0" default="0"/>
+    <arg name="P_pos_0" default="0"/>
+    <arg name="Y_pos_0" default="-1.57"/>
     <group ns="$(arg robot_name_0)">
         <!-- <include file="$(find robot_gazebo)/launch/gmapping.launch">
             <arg name="robot_name" value="$(arg robot_name_0)"/>
         </include> -->
+
         <include file="$(find robot_gazebo)/launch/create_robot.launch">
             <arg name="robot_name" value="$(arg robot_name_0)"/>
             <arg name="robot_type" value="$(arg robot_type_0)"/>
-            <arg name="x_pos" value="2"/>
-            <arg name="y_pos" value="0.17"/>
-            <arg name="z_pos" value="0"/>
-            <arg name="R_pos" value="0"/>
-            <arg name="P_pos" value="0"/>
-            <arg name="Y_pos" value="3.14"/>
+            <arg name="x_pos" value="$(arg x_pos_0)"/>
+            <arg name="y_pos" value="$(arg y_pos_0)"/>
+            <arg name="z_pos" value="$(arg z_pos_0)"/>
+            <arg name="R_pos" value="$(arg R_pos_0)"/>
+            <arg name="P_pos" value="$(arg P_pos_0)"/>
+            <arg name="Y_pos" value="$(arg Y_pos_0)"/>
         </include>
-    </group>
-    <remap from="/$(arg robot_name_0)/tf" to="/$(arg robot_name_0)/tf"/>
-    <remap from="/$(arg robot_name_0)/tf_static" to="/$(arg robot_name_0)/tf_static"/>
 
-    <!-- <arg name="robot_name_1" default="npc_0"/>
+        <rosparam command="load" file="$(find iss_manager)/config/$(arg robot_type_0).yaml"/>
+        <include file="$(find iss_manager)/launch/iss_manager.launch"/>
+    </group>
+
+    <!-- <arg name="robot_name_1" default="ego_vehicle_duplicate"/>
     <arg name="robot_type_1" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
+    <arg name="x_pos_1" default="-1.8"/>
+    <arg name="y_pos_1" default="2"/>
+    <arg name="z_pos_1" default="0"/>
+    <arg name="R_pos_1" default="0"/>
+    <arg name="P_pos_1" default="0"/>
+    <arg name="Y_pos_1" default="-1.57"/>
     <group ns="$(arg robot_name_1)">
         <include file="$(find robot_gazebo)/launch/gmapping.launch">
             <arg name="robot_name" value="$(arg robot_name_1)"/>
         </include>
+
         <include file="$(find robot_gazebo)/launch/create_robot.launch">
             <arg name="robot_name" value="$(arg robot_name_1)"/>
             <arg name="robot_type" value="$(arg robot_type_1)"/>
-            <arg name="x_pos" value="2"/>
-            <arg name="y_pos" value="-0.2"/>
-            <arg name="z_pos" value="0"/>
-            <arg name="R_pos" value="0"/>
-            <arg name="P_pos" value="0"/>
-            <arg name="Y_pos" value="0"/>
+            <arg name="x_pos" value="$(arg x_pos_1)"/>
+            <arg name="y_pos" value="$(arg y_pos_1)"/>
+            <arg name="z_pos" value="$(arg z_pos_1)"/>
+            <arg name="R_pos" value="$(arg R_pos_1)"/>
+            <arg name="P_pos" value="$(arg P_pos_1)"/>
+            <arg name="Y_pos" value="$(arg Y_pos_1)"/>
         </include>
-    </group>
-    <remap from="/$(arg robot_name_1)/tf" to="/$(arg robot_name_1)/tf"/>
-    <remap from="/$(arg robot_name_1)/tf_static" to="/$(arg robot_name_1)/tf_static"/> -->
+        
+        <rosparam command="load" file="$(find iss_manager)/config/$(arg robot_type_1).yaml"/>
+        <include file="$(find iss_manager)/launch/iss_manager.launch"/>
+    </group> -->
 </launch>

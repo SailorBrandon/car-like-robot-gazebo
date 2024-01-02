@@ -28,9 +28,8 @@
 
     <!-- <node name="joint_state_publisher_node" pkg="joint_state_publisher" type="joint_state_publisher" respawn="false" output="screen"/> -->
 
-    <node name="gazebo_manager_node" pkg="robot_gazebo" type="gazebo_manager_node.py" output="screen">
-        <param name="robot_name" value="$(arg robot_name)"/>
-        <!-- <remap from="/$(arg robot_name)/gazebo_bridge/cmd_vel" to="/cmd_vel"/> -->
-    </node>
+    <rosparam file="$(find robot_gazebo)/config/gazebo_bridge.yaml" command="load"/>
+    <param name="robot_name" value="$(arg robot_name)"/>
+    <node name="gazebo_manager_node" pkg="robot_gazebo" type="gazebo_manager_node.py" output="screen"/>
 
 </launch>

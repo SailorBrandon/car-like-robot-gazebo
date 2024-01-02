@@ -3,7 +3,7 @@
 import math
 import rospy
 import tf
-from iss_manager.msg import State, ObjectDetection3D, ObjectDetection3DArray
+from iss_manager.msg import State, ObjectDetection3D, ObjectDetection3DArray, ctrl_msg
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import TransformStamped, Twist
 from gazebo_msgs.msg import ModelStates
@@ -13,46 +13,56 @@ from sensor_msgs.msg import PointCloud2, LaserScan
 from sensor_msgs import point_cloud2 as pc2
 from iss_manager.srv import SetGoal
 
+
 class GazeboManagerNode:
     def __init__(self) -> None:
-        self._gt_ego_odom_pub = rospy.Publisher("ego_odom", Odometry, queue_size=1)
-        self._ego_state_pub_odom = rospy.Publisher("ego_state_estimation_odom_msg", Odometry, queue_size=1)
-        self._ego_state_pub = rospy.Publisher("ego_state_estimation", State, queue_size=1)
-        self._object_detection_pub = rospy.Publisher("object_detection", ObjectDetection3DArray, queue_size=1)
-        
-        self._gazebo_states_sub = rospy.Subscriber("/gazebo/model_states", ModelStates, self._gazebo_states_callback)
         self._ego_vehicle_name = rospy.get_param("robot_name", "ego_vehicle")
-        
+        self._namespaces = rospy.get_namespace().replace("/", "") + "/"
+
+        self._ego_odom_pub = rospy.Publisher(
+            rospy.get_param("ego_odom_topic"), Odometry, queue_size=1)
+        self._ego_state_pub = rospy.Publisher(
+            rospy.get_param("ego_state_topic"), State, queue_size=1)
+        self._object_detection_pub = rospy.Publisher(rospy.get_param(
+            "object_detection_topic"), ObjectDetection3DArray, queue_size=1)
+        self._world_frame = rospy.get_param("world_frame", "map")
+
+        self._gazebo_states_sub = rospy.Subscriber(
+            "/gazebo/model_states", ModelStates, self._gazebo_states_callback)
+
         self._tf_broadcaster = tf.TransformBroadcaster()
-        self._ego_tf_pub_timer = rospy.Timer(rospy.Duration(0.1), self._ego_tf_pub_callback)
-        
+        self._ego_tf_pub_timer = rospy.Timer(
+            rospy.Duration(0.1), self._ego_tf_pub_callback)
+
         self._ego_odom = None
         self._tf_listener = tf.TransformListener()
-        self._ego_state_pub_timer = rospy.Timer(rospy.Duration(0.1), self._ego_state_pub_callback)
-        
-        self._ack_sub = rospy.Subscriber("ackermann_cmd_mux/output", AckermannDriveStamped, self._ack_callback)
-        self._cmd_vel_sub = rospy.Subscriber("/cmd_vel", Twist, self._cmd_vel_callback)
+        self._ego_state_pub_timer = rospy.Timer(
+            rospy.Duration(0.1), self._ego_state_pub_callback)
 
-        self._pub_vel_left_rear_wheel = rospy.Publisher("left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
-        self._pub_vel_right_rear_wheel = rospy.Publisher("right_rear_wheel_velocity_controller/command", Float64, queue_size=1)
-        self._pub_vel_left_front_wheel = rospy.Publisher("left_front_wheel_velocity_controller/command", Float64, queue_size=1)
-        self._pub_vel_right_front_wheel = rospy.Publisher("right_front_wheel_velocity_controller/command", Float64, queue_size=1)
-        self._pub_pos_left_steering_hinge = rospy.Publisher("left_steering_hinge_position_controller/command", Float64, queue_size=1)
-        self._pub_pos_right_steering_hinge = rospy.Publisher("right_steering_hinge_position_controller/command", Float64, queue_size=1)
+        self._cmd_vel_sub = rospy.Subscriber(rospy.get_param(
+            "control_command_topic"), Twist, self._cmd_vel_callback)
+        self._pub_vel_left_rear_wheel = rospy.Publisher(
+            "left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
+        self._pub_vel_right_rear_wheel = rospy.Publisher(
+            "right_rear_wheel_velocity_controller/command", Float64, queue_size=1)
+        self._pub_vel_left_front_wheel = rospy.Publisher(
+            "left_front_wheel_velocity_controller/command", Float64, queue_size=1)
+        self._pub_vel_right_front_wheel = rospy.Publisher(
+            "right_front_wheel_velocity_controller/command", Float64, queue_size=1)
+        self._pub_pos_left_steering_hinge = rospy.Publisher(
+            "left_steering_hinge_position_controller/command", Float64, queue_size=1)
+        self._pub_pos_right_steering_hinge = rospy.Publisher(
+            "right_steering_hinge_position_controller/command", Float64, queue_size=1)
         self._fac = 31.25
-        
-        self._namespaces = rospy.get_namespace().replace("/", "") + "/"
-        self._use_real_car_odom = False
-        if self._use_real_car_odom:
-            self._real_car_odom_sub = rospy.Subscriber("/odom", Odometry, self._real_car_odom_callback)
-        
-        self._velodyne_sub = rospy.Subscriber("/velodyne_points", PointCloud2, self._velodyne_callback)
-        self._2d_laser_scan_pub = rospy.Publisher("scan", LaserScan, queue_size=1)
-        
-        rospy.sleep(5)
+
+        self._velodyne_sub = rospy.Subscriber(rospy.get_param(
+            "3d_lidar_topic"), PointCloud2, self._velodyne_callback)
+        self._2d_laser_scan_pub = rospy.Publisher(
+            rospy.get_param("2d_lidar_topic"), LaserScan, queue_size=1)
+
+        rospy.wait_for_service('/gazebo/get_model_state', timeout=5)
         self._call_set_goal_srv()
-    
-    
+
     def _call_set_goal_srv(self):
         x = 2
         y = -0.2
@@ -63,9 +73,9 @@ class GazeboManagerNode:
             resp = set_goal(x, y, heading_angle)
             return resp.success
         except rospy.ServiceException as e:
-            print("Service call failed: %s"%e)
+            print("Planning service call failed: %s" % e)
             return False
-    
+
     def _velodyne_callback(self, point_cloud_msg):
         laser_scan = LaserScan()
         laser_scan.header = point_cloud_msg.header
@@ -81,12 +91,12 @@ class GazeboManagerNode:
                 continue
             angle = math.atan2(p[1], p[0])
             distance = math.sqrt(p[0]**2 + p[1]**2)
-            index = int((angle - laser_scan.angle_min) / laser_scan.angle_increment)
+            index = int((angle - laser_scan.angle_min) /
+                        laser_scan.angle_increment)
             if 0 <= index < len(laser_scan.ranges) and distance < laser_scan.ranges[index]:
                 laser_scan.ranges[index] = distance
         self._2d_laser_scan_pub.publish(laser_scan)
-        
-            
+
     def _ego_tf_pub_callback(self, event):
         if self._ego_odom is None:
             return
@@ -101,8 +111,10 @@ class GazeboManagerNode:
         tf_msg.transform.rotation.y = self._ego_odom.pose.pose.orientation.y
         tf_msg.transform.rotation.z = self._ego_odom.pose.pose.orientation.z
         tf_msg.transform.rotation.w = self._ego_odom.pose.pose.orientation.w
+        if tf_msg.transform.rotation.x == 0 and tf_msg.transform.rotation.y == 0 and tf_msg.transform.rotation.z == 0 and tf_msg.transform.rotation.w == 0:
+            return
         self._tf_broadcaster.sendTransformMessage(tf_msg)
-   
+
     def _gazebo_states_callback(self, msg):
         all_detections = ObjectDetection3DArray()
         self._ego_odom = Odometry()
@@ -110,118 +122,72 @@ class GazeboManagerNode:
             if msg.name[i][:len("npc")] == "npc":
                 detection = ObjectDetection3D()
                 detection.header.stamp = rospy.Time.now()
-                detection.header.frame_id = self._namespaces + "map"
+                detection.header.frame_id = self._namespaces + self._world_frame
                 detection.id = 0
                 detection.score = 1.0
                 detection.state.x = msg.pose[i].position.x
                 detection.state.y = msg.pose[i].position.y
-                ang = tf.transformations.euler_from_quaternion([msg.pose[i].orientation.x, msg.pose[i].orientation.y, msg.pose[i].orientation.z, msg.pose[i].orientation.w])
+                ang = tf.transformations.euler_from_quaternion(
+                    [msg.pose[i].orientation.x, msg.pose[i].orientation.y, msg.pose[i].orientation.z, msg.pose[i].orientation.w])
                 detection.state.heading_angle = ang[2]
-                detection.state.velocity = math.sqrt(msg.twist[i].linear.x**2 + msg.twist[i].linear.y**2)
+                detection.state.velocity = math.sqrt(
+                    msg.twist[i].linear.x**2 + msg.twist[i].linear.y**2)
                 detection.state.acceleration = 0
                 detection.bbox.size.x = 0.4
                 detection.bbox.size.y = 0.2
                 detection.bbox.size.z = 0.3
-                detection.bbox.center.position.x = msg.pose[i].position.x
-                detection.bbox.center.position.y = msg.pose[i].position.y
-                detection.bbox.center.position.z = msg.pose[i].position.z
-                detection.bbox.center.orientation.x = msg.pose[i].orientation.x
-                detection.bbox.center.orientation.y = msg.pose[i].orientation.y
-                detection.bbox.center.orientation.z = msg.pose[i].orientation.z
-                detection.bbox.center.orientation.w = msg.pose[i].orientation.w
+                detection.bbox.center.position = msg.pose[i].position
+                detection.bbox.center.orientation = msg.pose[i].orientation
                 all_detections.detections.append(detection)
-            if msg.name[i] == "ego_vehicle":
+            if msg.name[i] == self._ego_vehicle_name:
                 self._ego_odom.header.stamp = rospy.Time.now()
-                self._ego_odom.header.frame_id = self._namespaces + "odom"
+                self._ego_odom.header.frame_id = self._namespaces + self._world_frame
                 self._ego_odom.child_frame_id = self._namespaces + "base_footprint"
-                self._ego_odom.pose.pose.position.x = msg.pose[i].position.x
-                self._ego_odom.pose.pose.position.y = msg.pose[i].position.y
-                self._ego_odom.pose.pose.position.z = msg.pose[i].position.z
-                self._ego_odom.pose.pose.orientation.x = msg.pose[i].orientation.x
-                self._ego_odom.pose.pose.orientation.y = msg.pose[i].orientation.y
-                self._ego_odom.pose.pose.orientation.z = msg.pose[i].orientation.z
-                self._ego_odom.pose.pose.orientation.w = msg.pose[i].orientation.w
-                self._ego_odom.twist.twist.linear.x = msg.twist[i].linear.x
-                self._ego_odom.twist.twist.linear.y = msg.twist[i].linear.y
-                self._ego_odom.twist.twist.linear.z = msg.twist[i].linear.z
-                self._ego_odom.twist.twist.angular.x = msg.twist[i].angular.x
-                self._ego_odom.twist.twist.angular.y = msg.twist[i].angular.y
-                self._ego_odom.twist.twist.angular.z = msg.twist[i].angular.z
-                self._gt_ego_odom_pub.publish(self._ego_odom)
+                self._ego_odom.pose.pose = msg.pose[i]
+                self._ego_odom.twist.twist = msg.twist[i]
+                self._ego_odom_pub.publish(self._ego_odom)
         self._object_detection_pub.publish(all_detections)
 
-    def _real_car_odom_callback(self, msg):
-        if self._use_real_car_odom:
-            ego_state_msg = State()
-            ego_state_msg.x = msg.pose.pose.position.x
-            ego_state_msg.y = msg.pose.pose.position.y
-            euler = tf.transformations.euler_from_quaternion([msg.pose.pose.orientation.x, msg.pose.pose.orientation.y, msg.pose.pose.orientation.z, msg.pose.pose.orientation.w])
-            ego_state_msg.heading_angle = euler[2]
-            ego_state_msg.velocity = math.sqrt(msg.twist.twist.linear.x**2 + msg.twist.twist.linear.y**2)
-            self._ego_state_pub.publish(ego_state_msg)
-
     def _ego_state_pub_callback(self, event):
-        # if not self._tf_listener.canTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0)):
-        #     rospy.logwarn("Cannot get transform from map to base_footprint")
-        #     return
-        # self._tf_listener.waitForTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0), rospy.Duration(5.0))
-        # (trans, rot) = self._tf_listener.lookupTransform(self._namespaces + "map", self._namespaces + "base_footprint", rospy.Time(0))
-        # x, y = trans[0], trans[1] #TODO: use slam or odom?
-        # euler = tf.transformations.euler_from_quaternion(rot)
-        # heading_angle = euler[2]
-        if self._ego_odom is None:
+        if not self._tf_listener.canTransform(self._namespaces + self._world_frame, self._namespaces + "base_footprint", rospy.Time(0)):
+            rospy.logwarn(
+                "Cannot get transform from " + self._world_frame + " to base_footprint")
             return
-        x = self._ego_odom.pose.pose.position.x
-        y = self._ego_odom.pose.pose.position.y
-        euler = tf.transformations.euler_from_quaternion([self._ego_odom.pose.pose.orientation.x, self._ego_odom.pose.pose.orientation.y, self._ego_odom.pose.pose.orientation.z, self._ego_odom.pose.pose.orientation.w])
+        self._tf_listener.waitForTransform(self._namespaces + self._world_frame,
+                                           self._namespaces + "base_footprint", rospy.Time(0), rospy.Duration(5.0))
+        (trans, rot) = self._tf_listener.lookupTransform(self._namespaces +
+                                                         self._world_frame, self._namespaces + "base_footprint", rospy.Time(0))
+        x, y = trans[0], trans[1]
+        euler = tf.transformations.euler_from_quaternion(rot)
         heading_angle = euler[2]
         while (self._ego_odom is None):
             rospy.sleep(0.1)
-        if self._use_real_car_odom == False:
-            ego_state_msg = State()
-            ego_state_msg.header.frame_id = self._namespaces + "odom"
-            # ego_state_msg.header.frame_id = self._namespaces + "map"
-            ego_state_msg.header.stamp = rospy.Time.now()
-            ego_state_msg.x = x
-            ego_state_msg.y = y
-            ego_state_msg.heading_angle = heading_angle
-            ego_state_msg.velocity = math.sqrt(self._ego_odom.twist.twist.linear.x**2 + self._ego_odom.twist.twist.linear.y**2)
-            self._ego_state_pub.publish(ego_state_msg)
-        # ego_state_odom_msg = Odometry()
-        # ego_state_odom_msg.header.stamp = rospy.Time.now()
-        # ego_state_odom_msg.header.frame_id = self._namespaces + "odom"
-        # # ego_state_odom_msg.header.frame_id = self._namespaces + "map"
-        # ego_state_odom_msg.child_frame_id = self._namespaces + "base_footprint"
-        # ego_state_odom_msg.pose.pose.position.x = x
-        # ego_state_odom_msg.pose.pose.position.y = y
-        # ego_state_odom_msg.pose.pose.position.z = 0.0
-        # ego_state_odom_msg.pose.pose.orientation.x = rot[0]
-        # ego_state_odom_msg.pose.pose.orientation.y = rot[1]
-        # ego_state_odom_msg.pose.pose.orientation.z = rot[2]
-        # ego_state_odom_msg.pose.pose.orientation.w = rot[3]
-        # ego_state_odom_msg.twist.twist.linear.x = self._ego_odom.twist.twist.linear.x
-        # ego_state_odom_msg.twist.twist.linear.y = self._ego_odom.twist.twist.linear.y
-        # ego_state_odom_msg.twist.twist.linear.z = self._ego_odom.twist.twist.linear.z
-        # ego_state_odom_msg.twist.twist.angular.x = self._ego_odom.twist.twist.angular.x
-        # ego_state_odom_msg.twist.twist.angular.y = self._ego_odom.twist.twist.angular.y
-        # ego_state_odom_msg.twist.twist.angular.z = self._ego_odom.twist.twist.angular.z
-        # self._ego_state_pub_odom.publish(ego_state_odom_msg)
-        
-    def _ack_callback(self, msg):
+        ego_state_msg = State()
+        ego_state_msg.header.frame_id = self._namespaces + self._world_frame
+        ego_state_msg.header.stamp = rospy.Time.now()
+        ego_state_msg.name = self._ego_vehicle_name
+        ego_state_msg.x = x
+        ego_state_msg.y = y
+        ego_state_msg.heading_angle = heading_angle
+        ego_state_msg.velocity = math.sqrt(
+            self._ego_odom.twist.twist.linear.x**2 + self._ego_odom.twist.twist.linear.y**2)
+        self._ego_state_pub.publish(ego_state_msg)
+
+    def _cmd_vel_callback(self, msg):
+        speed = msg.linear.x
+        steering_angle = msg.angular.z
         vel_left_rear_wheel = Float64()
         vel_right_rear_wheel = Float64()
         vel_left_front_wheel = Float64()
         vel_right_front_wheel = Float64()
         pos_left_steering_hinge = Float64()
         pos_right_steering_hinge = Float64()
-
-        vel_left_rear_wheel.data = msg.drive.speed * self._fac
-        vel_right_rear_wheel.data = msg.drive.speed * self._fac
-        vel_left_front_wheel.data = msg.drive.speed * self._fac
-        vel_right_front_wheel.data = msg.drive.speed * self._fac
-        pos_left_steering_hinge.data = msg.drive.steering_angle
-        pos_right_steering_hinge.data = msg.drive.steering_angle
-
+        vel_left_rear_wheel.data = speed * self._fac
+        vel_right_rear_wheel.data = speed * self._fac
+        vel_left_front_wheel.data = speed * self._fac
+        vel_right_front_wheel.data = speed * self._fac
+        pos_left_steering_hinge.data = steering_angle
+        pos_right_steering_hinge.data = steering_angle
         self._pub_vel_left_rear_wheel.publish(vel_left_rear_wheel)
         self._pub_vel_right_rear_wheel.publish(vel_right_rear_wheel)
         self._pub_vel_left_front_wheel.publish(vel_left_front_wheel)
@@ -229,15 +195,8 @@ class GazeboManagerNode:
         self._pub_pos_left_steering_hinge.publish(pos_left_steering_hinge)
         self._pub_pos_right_steering_hinge.publish(pos_right_steering_hinge)
 
-    def _cmd_vel_callback(self, msg):
-        speed = msg.linear.x
-        steering_angle = msg.angular.z
-        ack_msg = AckermannDriveStamped()
-        ack_msg.drive.speed = speed
-        ack_msg.drive.steering_angle = steering_angle
-        self._ack_callback(ack_msg)
 
 if __name__ == "__main__":
-    rospy.init_node("gazebo_manager_node", anonymous=True)
+    rospy.init_node("gazebo_manager_node")
     gazebo_bridge = GazeboManagerNode()
     rospy.spin()
