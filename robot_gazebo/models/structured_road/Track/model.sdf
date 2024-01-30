@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="Track">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>25 25</size>
+          </plane>
+        </geometry>
+        <surface>
+          <contact>
+            <collide_bitmask>0xffff</collide_bitmask>
+          </contact>
+          <friction>
+            <ode>
+              <mu>100</mu>
+              <mu2>50</mu2>
+            </ode>
+          </friction>
+        </surface>
+      </collision>
+
+      <visual name="visual">
+        <cast_shadows>true</cast_shadows>
+        <transparency> 0 </transparency>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>22.7272 12.5814</size>
+          </plane>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1 </ambient>
+          <diffuse>1 1 1 1 </diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>1 1 1 1 </emissive>
+          <script>
+            <uri>model://structured_road/Track/materials/scripts</uri>
+            <uri>model://structured_road/Track/materials/textures</uri>
+            <name>Track/Track_Material</name>
+          </script>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

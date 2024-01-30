@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="world" default="simple_road_v1" doc="ISCAS_building, ROS-Academy, simple_road, simple_road"/>
+    <arg name="world" default="road_2024" doc="ISCAS_building, ROS-Academy, simple_road, simple_road"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="true"/>
     <arg name="gui" default="true"/>
@@ -20,12 +20,12 @@
 
     <arg name="robot_name_0" default="ego_vehicle"/>
     <arg name="robot_type_0" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
-    <arg name="x_pos_0" default="-1.8"/>
-    <arg name="y_pos_0" default="2"/>
+    <arg name="x_pos_0" default="10.73"/>
+    <arg name="y_pos_0" default="1.29"/>
     <arg name="z_pos_0" default="0"/>
     <arg name="R_pos_0" default="0"/>
     <arg name="P_pos_0" default="0"/>
-    <arg name="Y_pos_0" default="-1.57"/>
+    <arg name="Y_pos_0" default="3.14"/>
     <group ns="$(arg robot_name_0)">
         <!-- <include file="$(find robot_gazebo)/launch/gmapping.launch">
             <arg name="robot_name" value="$(arg robot_name_0)"/>
@@ -42,8 +42,8 @@
             <arg name="Y_pos" value="$(arg Y_pos_0)"/>
         </include>
 
-        <rosparam command="load" file="$(find iss_manager)/config/$(arg robot_type_0).yaml"/>
-        <include file="$(find iss_manager)/launch/iss_manager.launch"/>
+        <!-- <rosparam command="load" file="$(find iss_manager)/config/$(arg robot_type_0).yaml"/>
+        <include file="$(find iss_manager)/launch/iss_manager.launch"/> -->
     </group>
 
     <!-- <arg name="robot_name_1" default="ego_vehicle_duplicate"/>
