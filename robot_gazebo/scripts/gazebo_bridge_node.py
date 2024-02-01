@@ -5,7 +5,7 @@ import rospy
 import tf
 from iss_manager.msg import State, ObjectDetection3D, ObjectDetection3DArray, ControlCommand
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import TransformStamped, Twist
+from geometry_msgs.msg import TransformStamped, Twist, PoseStamped
 from gazebo_msgs.msg import ModelStates
 from ackermann_msgs.msg import AckermannDriveStamped
 from std_msgs.msg import Float64
@@ -61,12 +61,13 @@ class GazeboBridgeNode:
             rospy.get_param("2d_lidar_topic"), LaserScan, queue_size=1)
 
         rospy.wait_for_service('/gazebo/get_model_state', timeout=5)
-        self._call_set_goal_srv()
-
-    def _call_set_goal_srv(self):
-        x = 2
-        y = -0.2
-        heading_angle = 0
+        self._goal_sub = rospy.Subscriber("/move_base_simple/goal", PoseStamped, self._goal_callback)
+    
+    def _goal_callback(self, msg):
+        x = msg.pose.position.x
+        y = msg.pose.position.y
+        euler = tf.transformations.euler_from_quaternion([msg.pose.orientation.x, msg.pose.orientation.y, msg.pose.orientation.z, msg.pose.orientation.w])
+        heading_angle = euler[2]
         rospy.wait_for_service('planning/set_goal')
         try:
             set_goal = rospy.ServiceProxy('planning/set_goal', SetGoal)

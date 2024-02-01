@@ -29,7 +29,7 @@
         <geometry>
           <plane>
             <normal>0 0 1</normal>
-            <size>22.7272 12.5814</size>
+            <size>19.44 10.76</size>
           </plane>
         </geometry>
         <material>
