@@ -2,6 +2,7 @@ ego_odom_topic: "ego_odom"
 ego_state_topic: "ego_state_estimation"
 object_detection_topic: "object_detection"
 motion_prediction_topic: "motion_prediction"
+show_hd_map_rviz: true
 
 world_frame: "odom"
 control_command_topic: "/cmd_vel"

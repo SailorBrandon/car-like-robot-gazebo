@@ -21,7 +21,7 @@
     <arg name="robot_name_0" default="ego_vehicle"/>
     <arg name="robot_type_0" default="pav_s01" doc="pav_s00, pav_s01, pav_s01_scaled"/>
     <arg name="x_pos_0" default="9.75"/>
-    <arg name="y_pos_0" default="1.16"/>
+    <arg name="y_pos_0" default="1.2"/>
     <arg name="z_pos_0" default="0"/>
     <arg name="R_pos_0" default="0"/>
     <arg name="P_pos_0" default="0"/>
