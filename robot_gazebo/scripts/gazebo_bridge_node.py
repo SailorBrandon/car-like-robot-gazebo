@@ -41,6 +41,7 @@ class GazeboBridgeNode:
 
         self._control_cmd_sub = rospy.Subscriber(rospy.get_param(
             "control_command_topic"), ControlCommand, self._ctrl_cmd_callback)
+        # self._control_cmd_sub = rospy.Subscriber("/cmd_vel", Twist, self._ctrl_cmd_callback)
         self._pub_vel_left_rear_wheel = rospy.Publisher(
             "left_rear_wheel_velocity_controller/command", Float64, queue_size=1)
         self._pub_vel_right_rear_wheel = rospy.Publisher(
@@ -177,18 +178,42 @@ class GazeboBridgeNode:
     def _ctrl_cmd_callback(self, msg):
         speed = msg.throttle
         steering_angle = msg.steering
+        # speed = msg.linear.x
+        # steering_angle = msg.angular.z
+        
         vel_left_rear_wheel = Float64()
         vel_right_rear_wheel = Float64()
         vel_left_front_wheel = Float64()
         vel_right_front_wheel = Float64()
         pos_left_steering_hinge = Float64()
         pos_right_steering_hinge = Float64()
-        vel_left_rear_wheel.data = speed * self._fac
-        vel_right_rear_wheel.data = speed * self._fac
-        vel_left_front_wheel.data = speed * self._fac
-        vel_right_front_wheel.data = speed * self._fac
-        pos_left_steering_hinge.data = steering_angle
-        pos_right_steering_hinge.data = steering_angle
+        wheelbase = 0.26
+        thread = 0.2
+        wheel_radius = 0.05
+        
+        if steering_angle != 0:    
+            r = wheelbase / math.fabs(math.tan(steering_angle))
+            w = speed / r 
+            r_left_rear = r - (thread / 2) * math.copysign(1, steering_angle)
+            r_right_rear = r + (thread / 2) * math.copysign(1, steering_angle)
+            r_left_front = math.sqrt(r_left_rear**2 + wheelbase**2) 
+            r_right_front = math.sqrt(r_right_rear**2 + wheelbase**2)
+            vel_left_rear_wheel.data = w * r_left_rear / wheel_radius
+            vel_right_rear_wheel.data = w * r_right_rear / wheel_radius
+            vel_left_front_wheel.data = w * r_left_front / wheel_radius
+            vel_right_front_wheel.data = w * r_right_front / wheel_radius
+            pos_left_steering_hinge.data = math.atan(wheelbase / r_left_rear) * math.copysign(1, steering_angle)
+            pos_right_steering_hinge.data = math.atan(wheelbase / r_right_rear) * math.copysign(1, steering_angle)
+            # print("left: ", pos_left_steering_hinge.data)
+            # print("right: ", pos_right_steering_hinge.data)
+        else:
+            vel_left_rear_wheel.data = speed / wheel_radius
+            vel_right_rear_wheel.data = speed / wheel_radius
+            vel_left_front_wheel.data = speed / wheel_radius
+            vel_right_front_wheel.data = speed / wheel_radius
+            pos_left_steering_hinge.data = 0
+            pos_right_steering_hinge.data = 0
+        
         self._pub_vel_left_rear_wheel.publish(vel_left_rear_wheel)
         self._pub_vel_right_rear_wheel.publish(vel_right_rear_wheel)
         self._pub_vel_left_front_wheel.publish(vel_left_front_wheel)
